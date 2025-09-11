@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="es" class="h-full">
+<head>
+    <script>
+        // Verificar si el usuario ha iniciado sesión (Esto se moverá a js/china.js)
+        // document.addEventListener('DOMContentLoaded', function() {
+        //     const isLoggedIn = localStorage.getItem('chinaLoggedIn');
+        //     if (!isLoggedIn) {
+        //         window.location.href = 'login_importadores.html';
+        //     }
+        // });
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel China - Importadora Larrain</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/tippy.js@6/dist/tippy-bundle.umd.min.js"></script>
+
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: { 50: '#f0f9ff', 100: '#e0f2fe', 200: '#bae6fd', 300: '#7dd3fc', 400: '#38bdf8', 500: '#0ea5e9', 600: '#0284c7', 700: '#0369a1', 800: '#075985', 900: '#0c4a6e' },
+                        secondary: { 50: '#f8fafc', 100: '#f1f5f9', 200: '#e2e8f0', 300: '#cbd5e1', 400: '#94a3b8', 500: '#64748b', 600: '#475569', 700: '#334155', 800: '#1e293b', 900: '#0f172a' },
+                    },
+                    fontFamily: { sans: ['Inter', 'sans-serif'], },
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        [x-cloak] { display: none !important; }
+        .sidebar {
+            transition: transform 0.3s ease-in-out; /* Cambiado para transform */
+            scrollbar-width: thin;
+            scrollbar-color: #cbd5e1 #f1f5f9;
+        }
+        .sidebar::-webkit-scrollbar { width: 6px; }
+        .sidebar::-webkit-scrollbar-track { background: #f1f5f9; }
+        .sidebar::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 3px; }
+        .stat-card { transition: all 0.3s ease; backdrop-filter: blur(10px); }
+        .stat-card:hover { transform: translateY(-3px); box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); }
+        .nav-item { transition: all 0.2s ease; }
+        .nav-item:hover { background-color: rgba(255, 255, 255, 0.1); }
+        .nav-item.active { background-color: rgba(255, 255, 255, 0.2); border-left: 4px solid #0ea5e9; }
+        /* Estilo para el overlay del menú móvil */
+        .sidebar-overlay {
+            transition: opacity 0.3s ease-in-out;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 h-full">
+    <div class="min-h-full flex">
+        <!-- Overlay para cerrar menú en móvil -->
+        <div id="sidebar-overlay" class="fixed inset-0 bg-black bg-opacity-50 z-30 hidden md:hidden"></div>
+
+        <!-- Sidebar -->
+        <div id="sidebar" class="sidebar bg-gradient-to-b from-primary-900 to-primary-800 text-white w-72 flex-shrink-0 flex flex-col h-screen fixed md:sticky top-0 z-40 
+                               transform -translate-x-full md:translate-x-0 overflow-y-auto">
+            <!-- Logo y marca -->
+            <div class="p-6 border-b border-primary-700">
+                <div class="flex items-center space-x-3">
+                    <div class="bg-white/10 p-2 rounded-lg"> <i class="fas fa-warehouse text-2xl text-white"></i> </div>
+                    <div>
+                        <h1 class="text-xl font-bold text-white">Importadora</h1>
+                        <p class="text-sm text-primary-200">Panel de Control</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Menú de navegación -->
+            <div class="flex-1 px-4 py-6 space-y-1">
+                <a href="#" class="nav-item flex items-center px-4 py-3 text-sm font-medium rounded-lg" data-section="dashboard" data-title="Dashboard">
+                    <i class="fas fa-tachometer-alt w-5 mr-3 text-center text-primary-200"></i>
+                    <span>Dashboard</span>
+                </a>
+                <h3 class="px-4 text-xs font-semibold text-primary-300 uppercase tracking-wider mb-4 mt-4">Análisis</h3>
+                <a href="#" class="nav-item flex items-center px-4 py-3 text-sm font-medium rounded-lg" data-section="ventas-totales" data-title="Ventas Totales">
+                    <i class="fas fa-chart-line w-5 mr-3 text-center text-primary-200"></i>
+                    <span>Ventas Totales</span>
+                </a>
+                <a href="#" class="nav-item flex items-center px-4 py-3 text-sm font-medium rounded-lg" data-section="ganancias-mensuales" data-title="Ganancias Mensuales">
+                    <i class="fas fa-calendar-alt w-5 mr-3 text-center text-primary-200"></i>
+                    <span>Ganancias Mensuales</span>
+                </a>
+                <a href="#" class="nav-item flex items-center px-4 py-3 text-sm font-medium rounded-lg" data-section="top-productos" data-title="Top Productos">
+                    <i class="fas fa-star w-5 mr-3 text-center text-primary-200"></i>
+                    <span>Top Productos</span>
+                </a>
+                <h3 class="px-4 text-xs font-semibold text-primary-300 uppercase tracking-wider mt-6 mb-4">Operaciones</h3>
+                <a href="#" class="nav-item flex items-center px-4 py-3 text-sm font-medium rounded-lg" data-section="shipping-history" data-title="Historial de Envíos">
+                    <i class="fas fa-shipping-fast w-5 mr-3 text-center text-primary-200"></i>
+                    <span>Historial de Envíos</span>
+                </a>
+                <a href="#" class="nav-item flex items-center px-4 py-3 text-sm font-medium rounded-lg" data-section="inventory-management" data-title="Gestión de Inventario">
+                    <i class="fas fa-box w-5 mr-3 text-center text-primary-200"></i>
+                    <span>Gestión de Inventario</span>
+                </a>
+                <a href="#" class="nav-item flex items-center px-4 py-3 text-sm font-medium rounded-lg" data-section="billing" data-title="Facturación">
+                    <i class="fas fa-file-invoice-dollar w-5 mr-3 text-center text-primary-200"></i>
+                    <span>Facturación</span>
+                </a>
+            </div>
+
+            <!-- Pie de página -->
+            <div class="p-6 border-t border-primary-700">
+                <div class="flex items-center space-x-3 mb-4">
+                    <div class="w-10 h-10 rounded-full bg-primary-600 flex items-center justify-center"> <i class="fas fa-user text-primary-200"></i> </div>
+                    <div class="flex-1 min-w-0">
+                        <p class="text-sm font-medium text-white truncate">Usuario China</p>
+                        <p class="text-xs text-primary-200 truncate">china@larrain.cl</p>
+                    </div>
+                </div>
+                <button id="logout-button" class="w-full flex items-center justify-center px-4 py-2.5 text-sm font-medium text-primary-900 bg-white rounded-lg hover:bg-gray-100 transition-colors duration-150">
+                    <i class="fas fa-sign-out-alt mr-2"></i>
+                    Cerrar Sesión
+                </button>
+            </div>
+        </div>
+        
+        <!-- Contenido Principal -->
+        <div class="flex-1 overflow-auto bg-gray-50">
+            <!-- Barra superior -->
+            <header class="bg-white shadow-sm">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
+                    <div class="flex items-center">
+                        <button id="mobile-menu-button" class="md:hidden mr-3 p-2 rounded-md text-gray-500 hover:text-gray-700 hover:bg-gray-100">
+                            <i class="fas fa-bars text-xl"></i>
+                        </button>
+                        <div>
+                            <h1 class="text-2xl font-bold text-gray-900" id="page-title">Dashboard</h1>
+                            <p class="text-sm text-gray-500" id="page-subtitle">Bienvenido al panel de administración de China</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <button class="p-2 rounded-full text-gray-500 hover:text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500">
+                            <i class="fas fa-bell"></i> <span class="sr-only">Notificaciones</span>
+                        </button>
+                        <div class="relative">
+                            <button class="flex items-center space-x-2 focus:outline-none" id="user-menu">
+                                <div class="w-10 h-10 rounded-full bg-primary-100 flex items-center justify-center"> <i class="fas fa-user text-primary-600"></i> </div>
+                                <span class="hidden md:inline-block text-sm font-medium text-gray-700">Usuario China</span>
+                                <i class="fas fa-chevron-down text-xs text-gray-500"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+                <!-- Contenedor para el Dashboard -->
+                <div id="dashboard-content">
+                    <h2 class="text-2xl font-bold mb-4">Dashboard</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                        <div class="stat-card bg-white p-6 rounded-lg shadow">
+                            <h3 class="text-lg font-semibold text-gray-700 mb-2">Total Ventas</h3>
+                            <p class="text-3xl font-bold text-blue-600">$12.500.000</p>
+                            <p class="text-sm text-gray-500 mt-1">850 unidades</p>
+                        </div>
+                        <div class="stat-card bg-white p-6 rounded-lg shadow">
+                            <h3 class="text-lg font-semibold text-gray-700 mb-2">Stock</h3>
+                            <p class="text-3xl font-bold text-green-600">1.200</p>
+                            <p class="text-sm text-gray-500 mt-1">productos en inventario</p>
+                        </div>
+                        <div class="stat-card bg-white p-6 rounded-lg shadow">
+                            <h3 class="text-lg font-semibold text-gray-700 mb-2">Nuevos clientes</h3>
+                            <p class="text-3xl font-bold text-purple-600">25</p>
+                            <p class="text-sm text-gray-500 mt-1">este mes</p>
+                        </div>
+                    </div>
+                     <div class="bg-white rounded-xl shadow-sm p-6 text-center border border-gray-100">
+                        <div class="w-20 h-20 bg-blue-50 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-flag text-3xl text-blue-600"></i>
+                        </div>
+                        <h2 class="text-xl font-bold text-gray-900 mb-2">Bienvenido al Panel de Control China</h2>
+                        <p class="text-gray-600 max-w-md mx-auto">Selecciona una opción del menú lateral para visualizar estadísticas y datos importantes.</p>
+                    </div>
+                </div>
+
+                <!-- Contenedor Wrapper para Reportes Dinámicos -->
+                <div id="report-content-wrapper" class="hidden">
+                    <div id="report-content" class="space-y-6">
+                        <!-- Los reportes (Ventas, Ganancias, Top Productos) se cargarán aquí por JS -->
+                    </div>
+                </div>
+
+                <!-- Contenedor para Historial de Envíos -->
+                <div id="shipping-history-content" class="hidden mt-8">
+                    <div class="flex justify-between items-center mb-6">
+                        <div>
+                            <h2 class="text-xl font-bold text-gray-900">Historial de Envíos</h2>
+                            <p class="text-sm text-gray-500">Registro de todos los envíos realizados</p>
+                        </div>
+                        <button class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500">
+                            <i class="fas fa-plus mr-2"></i> Nuevo Envío
+                        </button>
+                    </div>
+                    <div class="bg-white shadow-sm rounded-lg overflow-hidden">
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Mes</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Productos</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Cantidad</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Estado</th>
+                                        <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="text-gray-700">
+                                    <!-- Ejemplo de fila, esto podría ser dinámico -->
+                                    <tr class="hover:bg-gray-50">
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Mayo 2025</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                            <div class="flex items-center">
+                                                <div class="flex-shrink-0 h-10 w-10 bg-blue-100 rounded-md flex items-center justify-center mr-3"><i class="fas fa-box text-blue-600"></i></div>
+                                                <div>
+                                                    <div class="font-medium text-gray-900">Envío #CHN-2025-05-001</div>
+                                                    <div class="text-gray-500">Parlantes (50), Pendrives (30)</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                            <div class="font-medium">80 unidades</div><div class="text-xs text-gray-400">Peso: 250 kg</div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <span class="px-2.5 py-0.5 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800"><i class="fas fa-truck-moving mr-1"></i> En tránsito</span>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                            <button onclick="showDetailModal('Mayo 2025', [{name: 'Parlantes', quantity: 50, price: 79990}, {name: 'Pendrives', quantity: 30, price: 11990}])" class="text-primary-600 hover:text-primary-900 mr-3"><i class="fas fa-eye mr-1"></i> Ver</button>
+                                            <button class="text-gray-500 hover:text-gray-700"><i class="fas fa-ellipsis-v"></i></button>
+                                        </td>
+                                    </tr>
+                                    <tr class="hover:bg-gray-50">
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Junio 2025</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                            <div class="flex items-center">
+                                                <div class="flex-shrink-0 h-10 w-10 bg-blue-100 rounded-md flex items-center justify-center mr-3"><i class="fas fa-box text-blue-600"></i></div>
+                                                <div>
+                                                    <div class="font-medium text-gray-900">Envío #CHN-2025-06-001</div>
+                                                    <div class="text-gray-500">Camaras (4), Pendrives (25)</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                            <div class="font-medium">45 unidades</div><div class="text-xs text-gray-400">Peso: 15 kg</div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <span class="px-2.5 py-0.5 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800"><i class="fas fa-truck-moving mr-1"></i> En tránsito</span>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                            <button onclick="showDetailModal('Junio 2025', [{name: 'Camaras', quantity: 4, price: 649990}, {name: 'Pendrives', quantity: 25, price: 24990}])" class="text-primary-600 hover:text-primary-900 mr-3"><i class="fas fa-eye mr-1"></i> Ver</button>
+                                            <button class="text-gray-500 hover:text-gray-700"><i class="fas fa-ellipsis-v"></i></button>
+                                        </td>
+                                    </tr>
+                                    
+                                     <!-- Más filas según sea necesario -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contenedor para Gestión de Inventario -->
+                <div id="inventory-management-content" class="hidden mt-8">
+                    <!-- loadInventory() de JS llenará esto -->
+                     <h2 class="text-2xl font-bold mb-4">Gestión de Inventario</h2>
+                     <div id="inventory-table-container"></div> <!-- Contenedor específico para la tabla -->
+                </div>
+
+                <!-- Contenedor para Facturación -->
+                <div id="billing-content" class="hidden mt-8">
+                    <!-- loadBilling() de JS llenará esto -->
+                    <h2 class="text-2xl font-bold mb-4">Facturación</h2>
+                    <div id="billing-table-container"></div> <!-- Contenedor específico para la tabla -->
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Modal de detalle -->
+    <div id="detail-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-lg p-6 max-w-2xl w-full mx-auto">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-xl font-bold" id="modal-title">Detalle de Envío</h3>
+                <button id="close-modal-button" class="text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times text-2xl"></i>
+                </button>
+            </div>
+            <div id="modal-content-area"></div>
+            <button id="close-modal-button-footer" class="mt-6 w-full bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700">Cerrar</button>
+        </div>
+    </div>
+    
+    <!-- ÚNICO SCRIPT EXTERNO PARA LA LÓGICA DE LA APLICACIÓN -->
+    <script src="js/china.js"></script>
+</body>
+</html>

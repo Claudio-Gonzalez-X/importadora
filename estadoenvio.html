@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Estado de tu Envío</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+  <style>
+    /* Estilos para la línea de tiempo del envío */
+    .timeline-step {
+      transition: all 0.5s ease-in-out;
+    }
+    .timeline-step .timeline-icon {
+      transition: all 0.3s ease;
+    }
+    .timeline-step.completed .timeline-icon {
+      border-color: #22c55e;
+      background-color: #22c55e;
+      color: white;
+    }
+    .timeline-step.active .timeline-icon {
+      border-color: #4ade80;
+      background-color: #4ade80;
+      color: white;
+      transform: scale(1.1);
+    }
+    .timeline-step.pending .timeline-icon {
+      border-color: #6b7280;
+      background-color: #111827;
+      color: #6b7280;
+    }
+    .timeline-line {
+      transition: background-color 1s ease-in-out;
+    }
+  </style>
+</head>
+<body class="bg-gray-100 min-h-screen flex flex-col">
+
+  <!-- Navbar -->
+  <nav class="navbar bg-gray-900 text-white fixed w-full z-10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between h-16">
+        <div class="flex items-center">
+        <a href="index.html" class="text-white text-xl font-bold flex items-center">
+          <i class="fas fa-store mr-2"></i> Importadora Larrain
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Contenido principal -->
+  <main class="flex-grow container mx-auto px-4 py-12">
+    <div class="bg-white rounded-lg shadow-xl p-6 md:p-10 max-w-3xl mx-auto">
+      
+      <!-- Cabecera de Confirmación -->
+      <div class="text-center mb-8">
+        <i class="fas fa-check-circle text-green-500 text-6xl mb-4"></i>
+        <h1 class="text-3xl font-bold text-gray-800 mb-2">¡Gracias por tu compra!</h1>
+        <p class="text-gray-600">Tu pedido ha sido procesado. A continuación puedes ver el estado de tu envío.</p>
+      </div>
+
+<!-- Estado del Envío -->
+<div class="mb-10">
+  <h2 class="text-xl font-semibold text-center mb-8 text-gray-500">Estado del Envío</h2>
+  <div class="flex flex-col md:flex-row items-center justify-between gap-8">
+
+    <!-- Paso -->
+    <div id="status-recibido" class="timeline-step flex flex-col items-center relative">
+      <div class="timeline-icon w-16 h-16 rounded-full flex items-center justify-center text-2xl border-4 border-gray-500 bg-white text-gray-500 dark:bg-gray-900 dark:text-gray-400">
+        <i class="fas fa-receipt"></i>
+      </div>
+      <p class="mt-2 text-sm font-medium text-center text-gray-500">Pedido Recibido</p>
+    </div>
+
+    <!-- Línea -->
+    <div class="timeline-line hidden md:block h-1 w-full bg-gray-600"></div>
+
+    <div id="status-preparacion" class="timeline-step flex flex-col items-center relative">
+      <div class="timeline-icon w-16 h-16 rounded-full flex items-center justify-center text-2xl border-4 border-gray-500 bg-white text-gray-500 dark:bg-gray-900 dark:text-gray-400">
+        <i class="fas fa-box-open"></i>
+      </div>
+      <p class="mt-2 text-sm font-medium text-center text-gray-500">En Preparación</p>
+    </div>
+
+    <div class="timeline-line hidden md:block h-1 w-full bg-gray-600"></div>
+
+    <div id="status-enviado" class="timeline-step flex flex-col items-center relative">
+      <div class="timeline-icon w-16 h-16 rounded-full flex items-center justify-center text-2xl border-4 border-gray-500 bg-white text-gray-500 dark:bg-gray-900 dark:text-gray-400">
+        <i class="fas fa-truck"></i>
+      </div>
+      <p class="mt-2 text-sm font-medium text-center text-gray-500">Enviado</p>
+    </div>
+
+    <div class="timeline-line hidden md:block h-1 w-full bg-gray-600"></div>
+
+    <div id="status-entregado" class="timeline-step flex flex-col items-center relative">
+      <div class="timeline-icon w-16 h-16 rounded-full flex items-center justify-center text-2xl border-4 border-gray-500 bg-white text-gray-500 dark:bg-gray-900 dark:text-gray-400">
+        <i class="fas fa-hand-holding-heart"></i>
+      </div>
+      <p class="mt-2 text-sm font-medium text-center text-gray-500">Entregado</p>
+    </div>
+
+  </div>
+</div>
+
+      <!-- Resumen del Pedido -->
+      <div class="border-t pt-6">
+        <h2 class="text-xl font-semibold mb-4 text-gray-700">Resumen de tu Pedido</h2>
+        <div id="order-summary" class="space-y-3">
+          <!-- Los productos se insertarán aquí dinámicamente -->
+        </div>
+        <div id="order-total" class="text-right mt-4 font-bold text-lg text-blue-700">
+          <!-- El total se insertará aquí -->
+        </div>
+      </div>
+      
+      <!-- Botón para volver a la tienda -->
+      <div class="text-center mt-10">
+        <a href="index.html" class="inline-block bg-green-600 hover:bg-green-700 text-white px-8 py-3 rounded-lg font-semibold transition">
+          <i class="fas fa-arrow-left mr-2"></i> Volver a la tienda
+        </a>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-gray-800 text-white py-8 mt-12">
+    <div class="container mx-auto px-4 text-center text-gray-400">
+      © 2025 Importadora Larrain. Todos los derechos reservados.
+    </div>
+  </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Cargar el resumen del pedido desde sessionStorage
+      const cart = JSON.parse(sessionStorage.getItem('currentCart')) || [];
+      const summaryContainer = document.getElementById('order-summary');
+      const totalContainer = document.getElementById('order-total');
+      
+      const formatPrice = (price) => {
+        return new Intl.NumberFormat('es-CL', { style: 'currency', currency: 'CLP' }).format(price);
+      };
+      
+      let total = 0;
+      
+      if (cart.length > 0) {
+        cart.forEach(item => {
+          const subtotal = item.price * item.quantity;
+          total += subtotal;
+          
+          const productHTML = `
+            <div class="flex justify-between items-center text-sm">
+              <span class="text-gray-600">${item.name} (x${item.quantity})</span>
+              <span class="font-medium">${formatPrice(subtotal)}</span>
+            </div>
+          `;
+          summaryContainer.innerHTML += productHTML;
+        });
+        
+        totalContainer.innerHTML = `Total Pagado: ${formatPrice(total)}`;
+        
+        // Limpiar el carrito de localStorage y sessionStorage una vez procesado
+        localStorage.removeItem('cart');
+        sessionStorage.removeItem('currentCart');
+        
+      } else {
+        summaryContainer.innerHTML = '<p class="text-center text-gray-500">No se encontró información del pedido.</p>';
+      }
+      
+      // Simulación de la actualización del estado del envío
+      const steps = [
+        document.getElementById('status-recibido'),
+        document.getElementById('status-preparacion'),
+        document.getElementById('status-enviado'),
+        document.getElementById('status-entregado')
+      ];
+      const lines = document.querySelectorAll('.timeline-line');
+      
+      const updateStatus = (stepIndex) => {
+        steps.forEach((step, index) => {
+          step.classList.remove('active', 'completed', 'pending');
+          if (index < stepIndex) {
+            step.classList.add('completed');
+          } else if (index === stepIndex) {
+            step.classList.add('active');
+          } else {
+            step.classList.add('pending');
+          }
+        });
+        
+        lines.forEach((line, index) => {
+            if(index < stepIndex) {
+                line.style.backgroundColor = '#22c55e'; // green-500
+            } else {
+                line.style.backgroundColor = '#e5e7eb'; // gray-200
+            }
+        });
+      };
+      
+      // Iniciar la simulación
+      updateStatus(0); // Inicia en "Pedido Recibido"
+      
+      setTimeout(() => updateStatus(1), 2000); // Pasa a "En Preparación" después de 2 segundos
+      setTimeout(() => updateStatus(2), 5000); // Pasa a "Enviado" después de 5 segundos
+      setTimeout(() => updateStatus(3), 9000); // Pasa a "Entregado" después de 9 segundos
+    });
+  </script>
+</body>
+</html>

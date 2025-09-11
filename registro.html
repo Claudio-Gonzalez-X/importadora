@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Registro | Importadora Larrain</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: {
+              50: '#f0f9ff',
+              100: '#e0f2fe',
+              200: '#bae6fd',
+              300: '#7dd3fc',
+              400: '#38bdf8',
+              500: '#0ea5e9',
+              600: '#0284c7',
+              700: '#0369a1',
+              800: '#075985',
+              900: '#0c4a6e',
+            },
+            secondary: {
+              50: '#f0fdf4',
+              100: '#dcfce7',
+              200: '#bbf7d0',
+              300: '#86efac',
+              400: '#4ade80',
+              500: '#22c55e',
+              600: '#16a34a',
+              700: '#15803d',
+              800: '#166534',
+              900: '#14532d',
+            },
+            accent: {
+              50: '#fffbeb',
+              100: '#fef3c7',
+              200: '#fde68a',
+              300: '#fcd34d',
+              400: '#fbbf24',
+              500: '#f59e0b',
+              600: '#d97706',
+              700: '#b45309',
+              800: '#92400e',
+              900: '#78350f',
+            },
+          },
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+          },
+        }
+      }
+    }
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11" defer></script>
+  <style>
+    .navbar {
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+    .navbar.scrolled {
+      background-color: white;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+    .nav-link {
+      position: relative;
+      color: #4b5563;
+      font-weight: 500;
+      padding: 0.5rem 1rem;
+      border-radius: 0.375rem;
+      transition: all 0.2s;
+    }
+    .nav-link:hover {
+      color: #0ea5e9;
+      background-color: #f0f9ff;
+    }
+    .nav-link.active {
+      color: #0ea5e9;
+    }
+    .cart-badge {
+      position: absolute;
+      top: -8px;
+      right: -8px;
+      background-color: #ef4444;
+      color: white;
+      border-radius: 9999px;
+      width: 1.25rem;
+      height: 1.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body class="bg-gray-50 font-sans">
+  <!-- Barra de navegación -->
+  <nav class="navbar bg-gray-900 text-white fixed w-full z-10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between h-16">
+        <div class="flex items-center">
+          <a href="index.html" class="flex-shrink-0 flex items-center">
+            <span class="text-xl font-bold bg-gradient-to-r from-primary-600 to-primary-500 bg-clip-text text-transparent">
+              <i class="fas fa-store mr-2"></i>Importadora Larrain
+            </span>
+          </a>
+        </div>
+        <div class="hidden sm:ml-6 sm:flex sm:items-center space-x-4">
+          <a href="#" class="px-3 py-2 text-sm font-medium text-primary-400 border-b-2 border-primary-400">Registro</a>
+          <a href="login.html" class="px-3 py-2 text-sm font-medium text-white hover:text-primary-300">Iniciar Sesión</a>
+        </div>
+        <div class="-mr-2 flex sm:hidden">
+          <button type="button" id="mobile-menu-button" class="inline-flex items-center justify-center p-2 rounded-md text-white hover:text-primary-300 focus:outline-none">
+            <i class="fas fa-bars"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+    <!-- Menú móvil -->
+    <div class="sm:hidden hidden" id="mobile-menu">
+      <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+        <a href="#" class="block px-3 py-2 text-base font-medium text-primary-400 bg-gray-800">Registro</a>
+        <a href="login.html" class="block px-3 py-2 text-base font-medium text-white hover:bg-gray-800">Iniciar Sesión</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Contenido principal -->
+  <main class="pt-32 pb-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full">
+    <div class="bg-white rounded-xl shadow-lg overflow-hidden max-w-2xl mx-auto">
+      <!-- Encabezado -->
+      <div class="bg-gradient-to-r from-blue-600 to-blue-800 text-white p-6 text-center">
+        <h1 class="text-2xl md:text-3xl font-bold mb-2">Crear una Cuenta Nueva</h1>
+        <p class="text-blue-100">Completa el formulario para registrarte y acceder a todas las funcionalidades.</p>
+      </div>
+
+      <!-- Formulario -->
+      <div class="p-6 sm:p-8">
+        <form id="registerForm" class="space-y-6">
+          <div>
+            <label for="nombre" class="block text-sm font-medium text-gray-700 mb-1">Nombre Completo</label>
+            <input type="text" id="nombre" name="nombre" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary-500 focus:border-transparent transition" placeholder="Ingresa tu nombre completo">
+          </div>
+
+          <div>
+            <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Correo Electrónico</label>
+            <input type="email" id="email" name="email" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary-500 focus:border-transparent transition" placeholder="ejemplo@correo.com">
+          </div>
+
+          <div>
+            <label for="usuario" class="block text-sm font-medium text-gray-700 mb-1">Usuario</label>
+            <input type="text" id="usuario" name="usuario" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary-500 focus:border-transparent transition" placeholder="Elige un nombre de usuario">
+          </div>
+
+          <div>
+            <label for="contrasena" class="block text-sm font-medium text-gray-700 mb-1">Contraseña</label>
+            <input type="password" id="contrasena" name="contrasena" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary-500 focus:border-transparent transition" placeholder="Crea una contraseña segura">
+          </div>
+
+          <div>
+            <label for="confirmarContrasena" class="block text-sm font-medium text-gray-700 mb-1">Confirmar Contraseña</label>
+            <input type="password" id="confirmarContrasena" name="confirmarContrasena" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary-500 focus:border-transparent transition" placeholder="Repite la contraseña">
+          </div>
+
+          <div class="pt-2">
+            <button type="submit" class="w-full bg-gradient-to-r from-primary-600 to-primary-700 text-white py-3 px-4 rounded-md font-medium hover:from-primary-700 hover:to-primary-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition">
+              Crear Cuenta
+            </button>
+          </div>
+
+          <div class="text-center text-sm text-gray-500 mt-4">
+            ¿Ya tienes una cuenta? 
+            <a href="login.html" class="font-medium text-primary-600 hover:text-primary-500">Inicia sesión aquí</a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-gray-900 text-white pt-5 pb-1">
+    <div class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+      <p class="text-center text-gray-500 text-sm">&copy; 2025 Importadora Larrain. Todos los derechos reservados.</p>
+    </div>
+  </footer>
+
+  <script>
+    // Menú móvil
+    const mobileMenuButton = document.getElementById('mobile-menu-button');
+    const mobileMenu = document.getElementById('mobile-menu');
+    
+    if (mobileMenuButton && mobileMenu) {
+      mobileMenuButton.addEventListener('click', () => {
+        mobileMenu.classList.toggle('hidden');
+      });
+    }
+
+    // Validación del formulario
+    document.addEventListener('DOMContentLoaded', () => {
+      const form = document.getElementById('registerForm');
+      const nombre = document.getElementById('nombre');
+      const email = document.getElementById('email');
+      const usuario = document.getElementById('usuario');
+      const contrasena = document.getElementById('contrasena');
+      const confirmarContrasena = document.getElementById('confirmarContrasena');
+
+      const showError = (input, message) => {
+        const formControl = input.parentElement;
+        input.classList.add('border-red-500');
+        let errorDisplay = formControl.querySelector('.error-message');
+        
+        if (!errorDisplay) {
+          errorDisplay = document.createElement('p');
+          errorDisplay.className = 'mt-1 text-sm text-red-600 error-message';
+          formControl.appendChild(errorDisplay);
+        }
+        
+        errorDisplay.textContent = message;
+      };
+
+      const removeError = (input) => {
+        input.classList.remove('border-red-500');
+        const formControl = input.parentElement;
+        const errorDisplay = formControl.querySelector('.error-message');
+        
+        if (errorDisplay) {
+          formControl.removeChild(errorDisplay);
+        }
+      };
+
+      const checkRequired = (inputs) => {
+        let isRequired = false;
+        
+        inputs.forEach(input => {
+          if (input.value.trim() === '') {
+            showError(input, 'Este campo es obligatorio');
+            isRequired = true;
+          } else {
+            removeError(input);
+          }
+        });
+        
+        return isRequired;
+      };
+
+      const checkEmail = (input) => {
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        
+        if (input.value.trim() !== '' && !emailPattern.test(input.value.trim())) {
+          showError(input, 'Por favor ingresa un correo electrónico válido');
+          return false;
+        }
+        
+        removeError(input);
+        return true;
+      };
+
+      const checkPasswordsMatch = (input1, input2) => {
+        if (input1.value !== input2.value) {
+          showError(input2, 'Las contraseñas no coinciden');
+          return false;
+        }
+        
+        removeError(input2);
+        return true;
+      };
+
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        
+        const isRequired = checkRequired([nombre, email, usuario, contrasena, confirmarContrasena]);
+        const isEmailValid = checkEmail(email);
+        const isPasswordMatch = checkPasswordsMatch(contrasena, confirmarContrasena);
+        
+        if (!isRequired && isEmailValid && isPasswordMatch) {
+          // Mostrar mensaje de éxito
+          Swal.fire({
+            icon: 'success',
+            title: '¡Registro exitoso!',
+            text: 'Tu cuenta ha sido creada correctamente. Serás redirigido al inicio de sesión.',
+            confirmButtonColor: '#0ea5e9',
+            timer: 3000,
+            timerProgressBar: true,
+            showConfirmButton: false,
+            willClose: () => {
+              // Guardar los datos del usuario en localStorage
+              const userData = {
+                nombre: nombre.value.trim(),
+                email: email.value.trim(),
+                usuario: usuario.value.trim(),
+                contrasena: contrasena.value
+              };
+              
+              // Guardar en localStorage
+              localStorage.setItem('registeredUser', JSON.stringify(userData));
+              
+              // Redirigir a la página de inicio de sesión
+              window.location.href = 'login.html';
+            }
+          });
+        } else {
+          // Mostrar mensaje de error
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Por favor completa todos los campos correctamente',
+            confirmButtonColor: '#0ea5e9',
+          });
+        }
+      });
+
+      // Validación en tiempo real
+      nombre.addEventListener('input', () => {
+        if (nombre.value.trim() === '') {
+          showError(nombre, 'Este campo es obligatorio');
+        } else {
+          removeError(nombre);
+        }
+      });
+
+      email.addEventListener('input', () => {
+        checkEmail(email);
+      });
+
+      usuario.addEventListener('input', () => {
+        if (usuario.value.trim() === '') {
+          showError(usuario, 'Este campo es obligatorio');
+        } else {
+          removeError(usuario);
+        }
+      });
+
+      contrasena.addEventListener('input', () => {
+        if (contrasena.value.trim() === '') {
+          showError(contrasena, 'Este campo es obligatorio');
+        } else {
+          removeError(contrasena);
+          checkPasswordsMatch(contrasena, confirmarContrasena);
+        }
+      });
+
+      confirmarContrasena.addEventListener('input', () => {
+        checkPasswordsMatch(contrasena, confirmarContrasena);
+      });
+    });
+
+    // Efecto de scroll en la barra de navegación
+    window.addEventListener('scroll', () => {
+      const navbar = document.querySelector('.navbar');
+      if (window.scrollY > 10) {
+        navbar.classList.add('scrolled');
+      } else {
+        navbar.classList.remove('scrolled');
+      }
+    });
+  </script>
+</body>
+</html>
+

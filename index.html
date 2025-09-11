@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Inicio | Importadora Larrain</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: {
+              50: '#f0f9ff',
+              100: '#e0f2fe',
+              200: '#bae6fd',
+              300: '#7dd3fc',
+              400: '#38bdf8',
+              500: '#0ea5e9',
+              600: '#0284c7',
+              700: '#0369a1',
+              800: '#075985',
+              900: '#0c4a6e',
+            },
+            secondary: {
+              50: '#f0fdf4',
+              100: '#dcfce7',
+              200: '#bbf7d0',
+              300: '#86efac',
+              400: '#4ade80',
+              500: '#22c55e',
+              600: '#16a34a',
+              700: '#15803d',
+              800: '#166534',
+              900: '#14532d',
+            },
+            accent: {
+              50: '#fffbeb',
+              100: '#fef3c7',
+              200: '#fde68a',
+              300: '#fcd34d',
+              400: '#fbbf24',
+              500: '#f59e0b',
+              600: '#d97706',
+              700: '#b45309',
+              800: '#92400e',
+              900: '#78350f',
+            },
+          },
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+          },
+        }
+      }
+    }
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+  <style>
+    .navbar {
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+    .navbar.scrolled {
+      background-color: white;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+    .nav-link {
+      position: relative;
+      color: #4b5563;
+      font-weight: 500;
+      padding: 0.5rem 1rem;
+      border-radius: 0.375rem;
+      transition: all 0.2s;
+    }
+    .nav-link:hover {
+      color: #0ea5e9;
+      background-color: #f0f9ff;
+    }
+    .nav-link.active {
+      color: #0ea5e9;
+    }
+    .cart-badge {
+      position: absolute;
+      top: -8px;
+      right: -8px;
+      background-color: #ef4444;
+      color: white;
+      border-radius: 9999px;
+      width: 1.25rem;
+      height: 1.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+    .page-header {
+      background: linear-gradient(135deg, #0ea5e9 0%, #0369a1 100%);
+      color: white;
+      padding: 4rem 1rem;
+      margin-bottom: 2rem;
+    }
+    .page-title {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+    }
+    .page-subtitle {
+      font-size: 1.25rem;
+      opacity: 0.9;
+      max-width: 42rem;
+      margin: 0 auto;
+    }
+    .category-card {
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      overflow: hidden;
+    }
+    .category-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    }
+    .category-icon {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      color: #0ea5e9;
+    }
+  </style>
+    <style>
+        :root {
+            --primary-color: #4CAF50;
+            --secondary-color: #9C27B0;
+            --accent-color: #FFC107;
+            --text-primary: #212121;
+            --text-secondary: #757575;
+            --bg-light: #f5f5f5;
+            --bg-dark: #1a1a1a;
+        }
+        
+        body {
+            background: linear-gradient(135deg, var(--bg-light) 0%, #ffffff 100%);
+            min-height: 100vh;
+            color: var(--text-primary);
+            font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 4rem;
+            padding-bottom: 2rem;
+            border-bottom: 2px solid rgba(76, 175, 80, 0.1);
+        }
+        
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 200px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            clip-path: polygon(0 0, 100% 0, 100% 100%, 0 80%);
+            z-index: -1;
+        }
+        .logo {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--bg-dark);
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .navigation {
+            display: flex;
+            gap: 2.5rem;
+            align-items: center;
+        }
+        
+        .nav-link {
+            color: var(--text-primary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+        }
+        
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 0;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            transition: width 0.3s ease;
+        }
+        
+        .nav-link:hover::after {
+            width: 100%;
+        }
+        
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2.5rem;
+            padding: 2.5rem 0;
+        }
+        .category-card {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            position: relative;
+            height: 100%;
+        }
+        
+        .category-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(76, 175, 80, 0.1), rgba(156, 39, 176, 0.1));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .category-card:hover {
+            transform: translateY(-8px);
+            border-color: var(--primary-color);
+        }
+        
+        .category-card:hover::before {
+            opacity: 1;
+        }
+        
+        .category-content {
+            padding: 2rem;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+        
+        .category-icon {
+            font-size: 3rem;
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+            transition: all 0.3s ease;
+        }
+        
+        .category-icon::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .category-card:hover .category-icon::before {
+            opacity: 0.1;
+        }
+        
+        .category-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            transition: color 0.3s ease;
+        }
+        
+        .category-card:hover .category-title {
+            color: var(--primary-color);
+        }
+        
+        .category-description {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            line-height: 1.5;
+            transition: color 0.3s ease;
+        }
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .dropdown-toggle {
+            position: relative;
+            padding: 0.75rem 1rem;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        
+        .dropdown-toggle:hover {
+            background: rgba(76, 175, 80, 0.1);
+        }
+        
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+            min-width: 240px;
+            padding: 1rem;
+            margin-top: 0.5rem;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+            z-index: 10;
+        }
+        
+        .dropdown:hover .dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+        
+        .dropdown-item {
+            padding: 1rem;
+            color: var(--text-primary);
+            transition: all 0.2s ease;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .dropdown-item:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+        
+        .dropdown-item i {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            transition: color 0.3s ease;
+        }
+        
+        .dropdown-item:hover i {
+            color: white;
+        }
+        
+        .cart-badge {
+            background: var(--primary-color);
+            color: white;
+            border-radius: 50%;
+            padding: 0.35rem 0.85rem;
+            font-size: 0.8rem;
+            position: absolute;
+            top: -12px;
+            right: -12px;
+            transform: scale(0);
+            transition: transform 0.3s ease;
+        }
+        
+        .dropdown-toggle:hover .cart-badge {
+            transform: scale(1);
+        }
+        @media (max-width: 768px) {
+            .navigation {
+                display: none;
+            }
+            .mobile-menu {
+                display: flex;
+                align-items: center;
+                gap: 1rem;
+            }
+            .mobile-menu-toggle {
+                font-size: 1.5rem;
+                cursor: pointer;
+            }
+            .mobile-menu-content {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: white;
+                padding: 1rem;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            }
+            .mobile-menu-content.active {
+                display: block;
+            }
+        }
+        .mobile-menu.active {
+            max-height: 1000px;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+  <!-- Barra de navegación -->
+  <nav class="navbar bg-gray-900 text-white fixed w-full z-10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between h-16">
+        <div class="flex items-center">
+          <a href="index.html" class="flex-shrink-0 flex items-center">
+            <span class="text-xl font-bold bg-gradient-to-r from-primary-600 to-primary-500 bg-clip-text text-transparent">
+              <i class="fas fa-store mr-2"></i>Importadora Larrain
+            </span>
+          </a>
+        </div>
+        <div class="hidden sm:ml-6 sm:flex sm:items-center space-x-4">
+          <a href="index.html" class="px-3 py-2 text-sm font-medium text-primary-600 border-b-2 border-primary-600">Inicio</a>
+          <a href="camaras.html" class="px-3 py-2 text-sm font-medium text-gray-700 hover:text-primary-600">Cámaras</a>
+          <a href="parlantes.html" class="px-3 py-2 text-sm font-medium text-gray-700 hover:text-primary-600">Parlantes</a>
+          <a href="pendrives.html" class="px-3 py-2 text-sm font-medium text-gray-700 hover:text-primary-600">Pendrives</a>
+          <a href="carrito.html" class="relative p-1 text-gray-700 hover:text-primary-600">
+            <i class="fas fa-shopping-cart text-xl"></i>
+          </a>
+        </div>
+        <div class="-mr-2 flex sm:hidden">
+          <button type="button" id="mobile-menu-button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-700 hover:text-primary-600 hover:bg-gray-100 focus:outline-none">
+            <i class="fas fa-bars"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+    <!-- Menú móvil -->
+    <div class="sm:hidden hidden" id="mobile-menu">
+      <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+        <a href="index.html" class="block px-3 py-2 text-base font-medium text-primary-600 bg-gray-100">Inicio</a>
+        <a href="camaras.html" class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-primary-600 hover:bg-gray-100">Cámaras</a>
+        <a href="parlantes.html" class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-primary-600 hover:bg-gray-100">Parlantes</a>
+        <a href="pendrives.html" class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-primary-600 hover:bg-gray-100">Pendrives</a>
+        <a href="carrito.html" class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-primary-600 hover:bg-gray-100">
+          <div class="flex items-center">
+            <span>Carrito</span>
+            <span id="mobile-cart-count" class="ml-2 bg-primary-600 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">0</span>
+          </div>
+        </a>
+      </div>
+    </div>
+  </nav>  <!-- Mobile menu, show/hide based on menu state -->
+    <div class="hidden sm:hidden" id="mobile-menu">
+      <div class="pt-2 pb-3 space-y-1 bg-white border-t border-gray-200">
+        <a href="index.html" class="block pl-3 pr-4 py-2 border-l-4 border-primary-500 text-base font-medium text-primary-600 bg-primary-50">
+          <i class="fas fa-home mr-2 w-5"></i> Inicio
+        </a>
+        <a href="camaras.html" class="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-600 hover:bg-gray-50 hover:border-gray-300">
+          <i class="fas fa-camera mr-2 w-5"></i> Cámaras
+        </a>
+        <a href="parlantes.html" class="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-600 hover:bg-gray-50 hover:border-gray-300">
+          <i class="fas fa-volume-up mr-2 w-5"></i> Parlantes
+        </a>
+        <a href="pendrives.html" class="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-600 hover:bg-gray-50 hover:border-gray-300">
+          <i class="fas fa-usb mr-2 w-5"></i> Pendrives
+        </a>
+        <a href="carrito.html" id="cart-button" class="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-600 hover:bg-gray-50 hover:border-gray-300 flex items-center">
+          <i class="fas fa-shopping-cart mr-2 w-5 text-gray-500"></i> Carrito
+          <span id="mobile-cart-counter" class="ml-auto bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center hidden">0</span>
+        </a>
+        <a href="login.html" class="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-red-600 hover:bg-red-50 hover:border-red-300 hover:text-red-800">
+          <i class="fas fa-sign-out-alt mr-2 w-5"></i> Cerrar Sesión
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Encabezado de la página -->
+  <header class="bg-gradient-to-r from-blue-600 to-blue-800 text-white pt-32 pb-24">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <h1 class="text-4xl md:text-5xl font-bold mb-4">Bienvenido a Importadora Larrain</h1>
+      <p class="text-xl max-w-3xl mx-auto">Descubre nuestra amplia selección de productos electrónicos de última generación a los mejores precios del mercado.</p>
+      <div class="mt-8 flex flex-col sm:flex-row justify-center gap-4">
+        <a href="#categorias" class="px-6 py-3 bg-white text-blue-700 font-medium rounded-md hover:bg-blue-50 transition-colors">
+          Ver productos
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Sección de categorías -->
+  <section id="categorias" class="py-16 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl font-extrabold text-gray-900 sm:text-4xl">Nuestras Categorías</h2>
+        <p class="mt-3 max-w-2xl mx-auto text-xl text-gray-500 sm:mt-4">
+          Explora nuestra amplia gama de productos electrónicos de última generación.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
+        <!-- Cámaras -->
+        <a href="camaras.html" class="group relative bg-white p-6 focus-within:ring-2 focus-within:ring-inset focus-within:ring-primary-500 rounded-lg border border-gray-200 hover:shadow-lg transition-shadow duration-200">
+          <div>
+            <span class="rounded-lg inline-flex p-3 bg-blue-50 text-blue-600 ring-4 ring-white">
+              <i class="fas fa-camera text-2xl"></i>
+            </span>
+          </div>
+          <div class="mt-6">
+            <h3 class="text-lg font-medium">
+              <span class="absolute inset-0" aria-hidden="true"></span>
+              Cámaras
+            </h3>
+            <p class="mt-2 text-sm text-gray-500">
+              Descubre nuestra selección de cámaras profesionales y accesorios para fotografía y video.
+            </p>
+          </div>
+          <span class="pointer-events-none absolute top-6 right-6 text-gray-300 group-hover:text-primary-500" aria-hidden="true">
+            <i class="fas fa-arrow-right"></i>
+          </span>
+        </a>
+
+        <!-- Parlantes -->
+        <a href="parlantes.html" class="group relative bg-white p-6 focus-within:ring-2 focus-within:ring-inset focus-within:ring-primary-500 rounded-lg border border-gray-200 hover:shadow-lg transition-shadow duration-200">
+          <div>
+            <span class="rounded-lg inline-flex p-3 bg-green-50 text-green-600 ring-4 ring-white">
+              <i class="fas fa-volume-up text-2xl"></i>
+            </span>
+          </div>
+          <div class="mt-6">
+            <h3 class="text-lg font-medium">
+              <span class="absolute inset-0" aria-hidden="true"></span>
+              Parlantes
+            </h3>
+            <p class="mt-2 text-sm text-gray-500">
+              Los mejores parlantes para disfrutar de tu música favorita con la mejor calidad de sonido.
+            </p>
+          </div>
+          <span class="pointer-events-none absolute top-6 right-6 text-gray-300 group-hover:text-primary-500" aria-hidden="true">
+            <i class="fas fa-arrow-right"></i>
+          </span>
+        </a>
+
+        <!-- Pendrives -->
+        <a href="pendrives.html" class="group relative bg-white p-6 focus-within:ring-2 focus-within:ring-inset focus-within:ring-primary-500 rounded-lg border border-gray-200 hover:shadow-lg transition-shadow duration-200">
+          <div>
+            <span class="rounded-lg inline-flex p-3 bg-yellow-50 text-yellow-600 ring-4 ring-white">
+              <i class="fas fa-usb text-2xl"></i>
+            </span>
+          </div>
+          <div class="mt-6">
+            <h3 class="text-lg font-medium">
+              <span class="absolute inset-0" aria-hidden="true"></span>
+              Pendrives
+            </h3>
+            <p class="mt-2 text-sm text-gray-500">
+              Almacena y transporta tus archivos con nuestros pendrives de alta velocidad y capacidad.
+            </p>
+          </div>
+          <span class="pointer-events-none absolute top-6 right-6 text-gray-300 group-hover:text-primary-500" aria-hidden="true">
+            <i class="fas fa-arrow-right"></i>
+          </span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pie de página -->
+  <footer id="contacto" class="bg-gray-900 text-white pt-16 pb-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+        <!-- Información de la empresa -->
+        <div class="space-y-4">
+          <h3 class="text-lg font-semibold">Importadora Larrain</h3>
+          <p class="text-gray-400">Tu tienda de confianza para productos electrónicos de última generación.</p>
+          <div class="flex space-x-4">
+            <a href="www.facebook.com" class="text-gray-400 hover:text-white transition-colors">
+              <i class="fab fa-facebook-f text-xl"></i>
+            </a>
+            <a href="www.twitter.com" class="text-gray-400 hover:text-white transition-colors">
+              <i class="fab fa-twitter text-xl"></i>
+            </a>
+            <a href="www.instagram.com" class="text-gray-400 hover:text-white transition-colors">
+              <i class="fab fa-instagram text-xl"></i>
+            </a>
+            <a href="www.youtube.com" class="text-gray-400 hover:text-white transition-colors">
+              <i class="fab fa-youtube text-xl"></i>
+            </a>
+          </div>
+        </div>
+
+        <!-- Categorías -->
+        <div>
+          <h4 class="text-lg font-semibold mb-4">Categorías</h4>
+          <ul class="space-y-2">
+            <li><a href="camaras.html" class="text-gray-400 hover:text-white transition-colors">Cámaras</a></li>
+            <li><a href="parlantes.html" class="text-gray-400 hover:text-white transition-colors">Parlantes</a></li>
+            <li><a href="pendrives.html" class="text-gray-400 hover:text-white transition-colors">Pendrives</a></li>
+          </ul>
+        </div>
+
+        <!-- Enlaces útiles -->
+        <div>
+          <h4 class="text-lg font-semibold mb-4">Enlaces útiles</h4>
+          <ul class="space-y-2">
+            <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Inicio</a></li>
+            <li><a href="login_administradores.html" class="text-gray-400 hover:text-white transition-colors">Administradores</a></li>
+            <li><a href="login_importadores.html" class="text-gray-400 hover:text-white transition-colors">Importadores</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Política de privacidad</a></li>
+          </ul>
+        </div>
+        <!-- Contacto -->
+        <div>
+          <h4 class="text-lg font-semibold mb-4">Contacto</h4>
+          <ul class="space-y-3 text-gray-400">
+            <li class="flex items-start">
+              <i class="fas fa-map-marker-alt mt-1 mr-3 text-primary-400"></i>
+              <span>Av. Principal 543, Puerto Montt, Chile</span>
+            </li>
+            <li class="flex items-center">
+              <i class="fas fa-phone-alt mr-3 text-primary-400"></i>
+              <span>+56 9 43356487</span>
+            </li>
+            <li class="flex items-center">
+              <i class="fas fa-envelope mr-3 text-primary-400"></i>
+              <span>contacto@import_larrain.cl</span>
+            </li>
+            <li class="flex items-center">
+              <i class="fas fa-clock mr-3 text-primary-400"></i>
+              <span>Lun - Vie: 9:00 - 20:00</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Derechos de autor -->
+      <div class="mt-12 pt-8 border-t border-gray-800 text-center text-gray-500 text-sm">
+        <p>&copy; 2025 Importadora Larrain. Todos los derechos reservados.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Back to top button -->
+  <button id="back-to-top" class="fixed bottom-6 right-6 bg-primary-600 text-white p-3 rounded-full shadow-lg opacity-0 invisible transition-all duration-300 hover:bg-primary-700">
+    <i class="fas fa-arrow-up"></i>
+  </button>
+
+  <script>
+    // Back to top button
+    const backToTopButton = document.getElementById('back-to-top');
+    
+    window.addEventListener('scroll', () => {
+      if (window.pageYOffset > 300) {
+        backToTopButton.classList.remove('opacity-0', 'invisible');
+        backToTopButton.classList.add('opacity-100', 'visible');
+      } else {
+        backToTopButton.classList.remove('opacity-100', 'visible');
+        backToTopButton.classList.add('opacity-0', 'invisible');
+      }
+    });
+    
+    backToTopButton.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+    
+    // Navbar scroll effect
+    const navbar = document.querySelector('.navbar');
+    if (navbar) {
+      window.addEventListener('scroll', () => {
+        if (window.scrollY > 10) {
+          navbar.classList.add('scrolled');
+        } else {
+          navbar.classList.remove('scrolled');
+        }
+      });
+    }
+
+    // Mobile menu toggle
+    const mobileMenuButton = document.getElementById('mobile-menu-button');
+    const mobileMenu = document.getElementById('mobile-menu');
+    const mobileCategoriesButton = document.getElementById('mobile-categories-button');
+    const mobileCategoriesMenu = document.getElementById('mobile-categories-menu');
+    const mobileCartCounter = document.getElementById('mobile-cart-counter');
+    const cartCounter = document.getElementById('cart-counter');
+
+    // Update mobile cart counter
+    if (cartCounter && mobileCartCounter) {
+      if (!cartCounter.classList.contains('hidden')) {
+        mobileCartCounter.textContent = cartCounter.textContent;
+        mobileCartCounter.classList.remove('hidden');
+      }
+    }
+
+    // Initialize mobile menu if elements exist
+    if (mobileMenuButton && mobileMenu) {
+      // Toggle mobile menu
+      mobileMenuButton.addEventListener('click', () => {
+        const isExpanded = mobileMenuButton.getAttribute('aria-expanded') === 'true';
+        mobileMenuButton.setAttribute('aria-expanded', !isExpanded);
+        mobileMenuButton.querySelectorAll('svg').forEach(icon => icon.classList.toggle('hidden'));
+        mobileMenu.classList.toggle('hidden');
+        
+        // Close categories menu when closing mobile menu
+        if (isExpanded && mobileCategoriesMenu) {
+          mobileCategoriesMenu.classList.add('hidden');
+        }
+      });
+
+      // Close mobile menu when clicking outside
+      document.addEventListener('click', (e) => {
+        if (!mobileMenu.contains(e.target) && !mobileMenuButton.contains(e.target)) {
+          mobileMenu.classList.add('hidden');
+          mobileMenuButton.setAttribute('aria-expanded', 'false');
+          mobileMenuButton.querySelectorAll('svg').forEach(icon => {
+            icon.classList.toggle('hidden', icon.getAttribute('d') === 'M4 6h16M4 12h16M4 18h16');
+          });
+        }
+      });
+    }
+
+    // Toggle mobile categories menu
+    if (mobileCategoriesButton && mobileCategoriesMenu) {
+      mobileCategoriesButton.addEventListener('click', (e) => {
+        e.stopPropagation();
+        mobileCategoriesMenu.classList.toggle('hidden');
+        const chevron = mobileCategoriesButton.querySelector('i.fa-chevron-down, i.fa-chevron-up');
+        if (chevron) {
+          chevron.classList.toggle('fa-chevron-down');
+          chevron.classList.toggle('fa-chevron-up');
+        }
+      });
+    }
+
+    // Initialize cart counter
+    document.addEventListener('DOMContentLoaded', function() {
+      try {
+        const cart = JSON.parse(localStorage.getItem('cart')) || [];
+        const totalItems = cart.reduce((sum, item) => sum + (item.quantity || 0), 0);
+        
+        if (totalItems > 0) {
+          const counters = [
+            document.getElementById('cart-counter'),
+            document.getElementById('mobile-cart-counter')
+          ].filter(Boolean);
+          
+          counters.forEach(counter => {
+            counter.textContent = totalItems;
+            counter.classList.remove('hidden');
+          });
+        }
+      } catch (error) {
+        console.error('Error initializing cart counter:', error);
+      }
+    });
+  </script>
+</body>
+</html>
