@@ -1,13 +1,104 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+/* src/index.css */
+
+/* 1. Directivas principales de Tailwind (NECESARIAS) */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* 2. CÓDIGO MIGRADO DESDE styles.css */
+
+/* Modern Catalog Styles */
+:root {
+  --primary: #4f46e5;
+  --primary-hover: #4338ca;
+  --secondary: #10b981;
+  --accent: #f59e0b;
+  --dark: #1e293b;
+  --light: #f8fafc;
+  --gray: #94a3b8;
+  --card-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --transition: all 0.3s ease;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+/* Base Styles */
+body {
+  @apply bg-gradient-to-br from-gray-50 to-gray-100 min-h-screen;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+/* Navigation */
+.navbar {
+  @apply bg-white/90 backdrop-blur-md shadow-md sticky top-0 z-50 border-b border-gray-200/50;
+  transition: var(--transition);
+}
+
+.navbar.scrolled {
+  @apply bg-white/95 shadow-lg;
+}
+
+.nav-link {
+  @apply text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium;
+}
+
+/* Home Banner */
+.hero-banner {
+  @apply bg-cover bg-center;
+  /* La ruta se ajusta a la carpeta public/img */
+  background-image: url('../public/img/banner.jpg');
+  /* Ajusta la altura si es necesario */
+}
+
+/* Product Grid */
+.products-grid {
+  @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6;
+}
+
+.product-card {
+  @apply bg-white rounded-xl shadow-lg hover:shadow-xl overflow-hidden transition-all duration-300 transform hover:-translate-y-1 flex flex-col;
+}
+
+.product-badge {
+  @apply bg-secondary-500 text-white text-xs font-bold px-2 py-1 rounded-full;
+}
+
+.product-details {
+  @apply p-5 flex flex-col flex-grow;
+}
+
+.product-title {
+  @apply text-lg font-semibold text-gray-900 mb-1 line-clamp-2;
+}
+
+.product-category {
+  @apply text-sm text-gray-500 mb-3;
+}
+
+.product-price {
+  @apply text-xl font-bold text-primary-600 mt-auto mb-4;
+}
+
+/* Buttons */
+.btn {
+  @apply px-4 py-2 rounded-lg font-medium transition-all duration-200 flex items-center justify-center gap-2;
+}
+
+.btn-primary {
+  @apply bg-primary-600 text-white hover:bg-primary-700 shadow-md hover:shadow-lg hover:-translate-y-0.5;
+}
+
+.btn-outline {
+  @apply border border-gray-300 text-gray-700 hover:bg-gray-50;
+}
+
+/* Cart Badge */
+.cart-badge {
+  @apply absolute -top-2 -right-2 bg-primary-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center shadow-md;
+  transition: var(--transition);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 640px) {
+  .products-grid {
+    @apply px-3;
+  }
 }
