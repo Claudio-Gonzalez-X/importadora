@@ -20,6 +20,22 @@ const formatearPrecio = (precio) => {
 // 2. Crear el Proveedor del Contexto
 export const CartProvider = ({ children }) => {
   const [cart, setCart] = useState(() => {
+    const updateItemQuantity = (itemId, newQuantity) => {
+  setCart(prevCart => {
+    if (newQuantity <= 0) {
+      // DELETE: Si la cantidad es 0 o menos, eliminamos el ítem (Requerido por Test 6)
+      return prevCart.filter(item => item.id !== itemId);
+    } else {
+      // UPDATE: Actualiza la cantidad (Requerido por Test 4)
+      return prevCart.map(item =>
+        item.id === itemId
+          ? { ...item, quantity: newQuantity }
+          : item
+      );
+    }
+  });
+};
+    
     // Inicializar el carrito con lo que hay en localStorage
     try {
         const storedCart = localStorage.getItem('cart');
@@ -46,7 +62,7 @@ export const CartProvider = ({ children }) => {
   
   // Función para obtener el subtotal (valor numérico)
   const getTotalPrice = () => {
-    return cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    return cart.reduce((sum, item) => sum + (item.precio * item.quantity), 0);
   };
 
   // CRUD: Create/Update
@@ -86,11 +102,26 @@ export const CartProvider = ({ children }) => {
   const limpiarCarrito = () => {
     setCart([]);
   };
-
+  const updateItemQuantity = (itemId, newQuantity) => {
+  setCart(prevCart => {
+    if (newQuantity <= 0) {
+      // DELETE: Si la cantidad es 0 o menos, eliminamos el ítem (Requerido por Test 6)
+      return prevCart.filter(item => item.id !== itemId);
+    } else {
+      // UPDATE: Actualiza la cantidad (Requerido por Test 4)
+      return prevCart.map(item =>
+        item.id === itemId
+          ? { ...item, quantity: newQuantity }
+          : item
+      );
+    }
+  });
+};
   const contextValue = {
     cart,
-    agregarAlCarrito, 
-    eliminarDelCarrito,
+    addItem: agregarAlCarrito,         // Test 2 y 3 esperan 'addItem'
+    removeItem: eliminarDelCarrito,    // Test 5 espera 'removeItem'
+    updateItemQuantity,                // Test 4 y 6 esperan 'updateItemQuantity'
     limpiarCarrito,
     getTotalItems,
     getTotalPrice,
@@ -98,11 +129,11 @@ export const CartProvider = ({ children }) => {
     products, 
   };
 
-  return (
-    <CartContext.Provider value={contextValue}>
-      {children}
-    </CartContext.Provider>
-  );
+ return (
+  <CartContext.Provider value={contextValue}>
+    {children}
+  </CartContext.Provider>
+ ); 
 };
 
 // 3. Hook personalizado
