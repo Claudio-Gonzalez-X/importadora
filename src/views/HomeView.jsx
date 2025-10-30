@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
@@ -39,21 +38,11 @@ const HomeView = () => {
       </div>
 
       <div className="container mx-auto px-4 py-12">
-        {/* Sección de Categorías */}
-        <section className="mb-16">
-          <h2 className="text-3xl font-bold text-gray-800 mb-6 border-b pb-2">Explorar Categorías</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <CategoryCard title="Parlantes Portátiles" imgUrl="img/categoria_portatil.jpg" linkTo="/parlantes?category=Portátiles" />
-            <CategoryCard title="Parlantes Potentes" imgUrl="img/categoria_potente.jpg" linkTo="/parlantes?category=Potentes" />
-            <CategoryCard title="Parlantes Inteligentes" imgUrl="img/categoria_inteligente.jpg" linkTo="/parlantes?category=Inteligentes" />
-          </div>
-        </section>
 
-        {/* Sección de Productos Destacados */}
         <section className="mb-16">
           <h2 className="text-3xl font-bold text-gray-800 mb-6 border-b pb-2">Productos Destacados</h2>
           <div className="products-grid"> 
-            {featuredProducts.slice(0, 4).map(product => ( 
+            {featuredProducts.slice(0, 8).map(product => ( 
               <ProductCard key={product.id} product={product} />
             ))}
           </div>
@@ -61,8 +50,6 @@ const HomeView = () => {
 
       </div>
       
-      {/* BackToTopButton (Lógica de scroll migrada de app.js) */}
-      {/* Asumiendo que has creado el componente BackToTopButton como se detalló antes */}
     </>
   );
 };

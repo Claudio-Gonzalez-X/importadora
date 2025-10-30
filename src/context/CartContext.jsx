@@ -119,8 +119,10 @@ export const CartProvider = ({ children }) => {
 };
   const contextValue = {
     cart,
+    agregarAlCarrito,             // Nombre usado por tus componentes (Ej: handleAddToCart)
     addItem: agregarAlCarrito,         // Test 2 y 3 esperan 'addItem'
-    removeItem: eliminarDelCarrito,    // Test 5 espera 'removeItem'
+    eliminarDelCarrito,           // Nombre original de la app
+    removeItem: eliminarDelCarrito,   // Test 5 espera 'removeItem'
     updateItemQuantity,                // Test 4 y 6 esperan 'updateItemQuantity'
     limpiarCarrito,
     getTotalItems,
