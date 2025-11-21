@@ -12,11 +12,16 @@ const Navbar = () => {
         <div className="flex justify-between h-16">
           {/* Logo */}
           <div className="flex items-center">
-            <Link to="/" className="flex-shrink-0 flex items-center">
+            <Link to="/" className="flex-shrink-0 flex items-center gap-2">
+              {/* OPCIÓN A: Si quieres usar una IMAGEN como logo */}
+              <img src="/img/logo.png" alt="Logo GonSeg" className="h-8 w-auto" />
+
+
+              {/* El Texto de la Marca */}
               <span className="text-xl font-bold bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">
-                <i className="fas fa-store mr-2 text-blue-500"></i>Importadora GonSeg
+                Importadora GonSeg
               </span>
-            </Link>
+  </Link>
           </div>
 
           {/* Enlaces de Escritorio */}
