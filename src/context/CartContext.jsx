@@ -1,14 +1,13 @@
 // src/context/CartContext.jsx
 import React, { createContext, useState, useEffect, useContext } from 'react';
 import Swal from 'sweetalert2'; 
-import products from '../data/products'; // Importar la lista de productos
+// import products from '../data/products'; // OPCIONAL: Si ya no usas el archivo local, puedes borrar esta línea.
 
 // 1. Crear y Exportar el Contexto
 export const CartContext = createContext();
 
-// Función de utilidad para formatear precio (migrada de app.js)
+// Función de utilidad para formatear precio
 const formatearPrecio = (precio) => {
-  // Manejo de NaN
   if (isNaN(precio)) return '$0';
   return new Intl.NumberFormat('es-CL', {
     style: 'currency',
@@ -19,39 +18,23 @@ const formatearPrecio = (precio) => {
 
 // 2. Crear el Proveedor del Contexto
 export const CartProvider = ({ children }) => {
+  // Inicializar el carrito desde localStorage
   const [cart, setCart] = useState(() => {
-    const updateItemQuantity = (itemId, newQuantity) => {
-  setCart(prevCart => {
-    if (newQuantity <= 0) {
-      // DELETE: Si la cantidad es 0 o menos, eliminamos el ítem (Requerido por Test 6)
-      return prevCart.filter(item => item.id !== itemId);
-    } else {
-      // UPDATE: Actualiza la cantidad (Requerido por Test 4)
-      return prevCart.map(item =>
-        item.id === itemId
-          ? { ...item, quantity: newQuantity }
-          : item
-      );
-    }
-  });
-};
-    
-    // Inicializar el carrito con lo que hay en localStorage
     try {
-        const storedCart = localStorage.getItem('cart');
-        return storedCart ? JSON.parse(storedCart) : [];
+      const storedCart = localStorage.getItem('cart');
+      return storedCart ? JSON.parse(storedCart) : [];
     } catch (error) {
-        console.error("Error al cargar el carrito:", error);
-        return [];
+      console.error("Error al cargar el carrito:", error);
+      return [];
     }
   });
   
-  // Sincronizar con localStorage en cada cambio de carrito
+  // Sincronizar con localStorage en cada cambio
   useEffect(() => {
     try {
-        localStorage.setItem('cart', JSON.stringify(cart));
+      localStorage.setItem('cart', JSON.stringify(cart));
     } catch (error) {
-        console.error("Error al guardar el carrito:", error);
+      console.error("Error al guardar el carrito:", error);
     }
   }, [cart]);
 
@@ -60,9 +43,8 @@ export const CartProvider = ({ children }) => {
     return cart.reduce((sum, item) => sum + (item.quantity || 0), 0);
   };
   
-  // Función para obtener el subtotal (valor numérico)
   const getTotalPrice = () => {
-    return cart.reduce((sum, item) => sum + (item.precio * item.quantity), 0);
+    return cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
   };
 
   // CRUD: Create/Update
@@ -75,15 +57,16 @@ export const CartProvider = ({ children }) => {
       newCart[itemIndex].quantity += quantity;
       setCart(newCart);
     } else {
-      // Agregar nuevo producto
+      // Agregar nuevo producto (asegura que 'quantity' sea parte del objeto)
       setCart([...cart, { ...product, quantity }]);
     }
     
-    // Notificación SweetAlert2 (migrada de app.js)
+    // Notificación SweetAlert2
+    // ⚠️ CORREGIDO: Ahora usa 'product.name' para la alerta
     Swal.fire({
       position: 'top-end',
       title: '¡Agregado!',
-      text: `${product.nombre} añadido al carrito.`,
+      text: `${product.name} añadido al carrito.`,
       showConfirmButton: false,
       timer: 1500,
       toast: true,
@@ -102,40 +85,43 @@ export const CartProvider = ({ children }) => {
   const limpiarCarrito = () => {
     setCart([]);
   };
+
+  // CRUD: Update Quantity (Lógica separada)
   const updateItemQuantity = (itemId, newQuantity) => {
-  setCart(prevCart => {
-    if (newQuantity <= 0) {
-      // DELETE: Si la cantidad es 0 o menos, eliminamos el ítem (Requerido por Test 6)
-      return prevCart.filter(item => item.id !== itemId);
-    } else {
-      // UPDATE: Actualiza la cantidad (Requerido por Test 4)
-      return prevCart.map(item =>
-        item.id === itemId
-          ? { ...item, quantity: newQuantity }
-          : item
-      );
-    }
-  });
-};
+    setCart(prevCart => {
+      if (newQuantity <= 0) {
+        // Si la cantidad es 0 o menos, eliminamos el ítem
+        return prevCart.filter(item => item.id !== itemId);
+      } else {
+        // Si no, actualizamos la cantidad
+        return prevCart.map(item =>
+          item.id === itemId
+            ? { ...item, quantity: newQuantity }
+            : item
+        );
+      }
+    });
+  };
+
   const contextValue = {
     cart,
-    agregarAlCarrito,             // Nombre usado por tus componentes (Ej: handleAddToCart)
-    addItem: agregarAlCarrito,         // Test 2 y 3 esperan 'addItem'
-    eliminarDelCarrito,           // Nombre original de la app
-    removeItem: eliminarDelCarrito,   // Test 5 espera 'removeItem'
-    updateItemQuantity,                // Test 4 y 6 esperan 'updateItemQuantity'
+    agregarAlCarrito,
+    addItem: agregarAlCarrito,      // Alias para tests o compatibilidad
+    eliminarDelCarrito,
+    removeItem: eliminarDelCarrito, // Alias para tests o compatibilidad
+    updateItemQuantity,
     limpiarCarrito,
     getTotalItems,
     getTotalPrice,
     formatearPrecio,
-    products, 
+    // products, // Ya no es necesario exponer la lista estática si usas Supabase
   };
 
- return (
-  <CartContext.Provider value={contextValue}>
-    {children}
-  </CartContext.Provider>
- ); 
+  return (
+    <CartContext.Provider value={contextValue}>
+      {children}
+    </CartContext.Provider>
+  ); 
 };
 
 // 3. Hook personalizado

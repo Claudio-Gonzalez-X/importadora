@@ -1,55 +1,81 @@
-import React, { useState, useMemo } from 'react';
-import { useCart } from '../context/CartContext'; 
+import React, { useState, useEffect, useMemo } from 'react';
+import { supabase } from '../supabaseClient'; // Asegúrate de tener este archivo creado
 import ProductCard from '../components/ProductCard';
 
 const ProductsView = () => {
-  const { products } = useCart(); 
-
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('Todos');
 
+  // 1. Cargar productos desde Supabase al iniciar
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        setLoading(true);
+        const { data, error } = await supabase
+          .from('products')
+          .select('*');
+
+        if (error) throw error;
+        setProducts(data);
+      } catch (error) {
+        console.error('Error cargando productos:', error.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProducts();
+  }, []);
+
+  // 2. Calcular categorías disponibles (usando la propiedad 'category' en inglés)
   const categories = useMemo(() => {
-    const allCategories = products.map(p => p.categoria);
+    const allCategories = products.map(p => p.category);
     return ['Todos', ...new Set(allCategories)].sort();
   }, [products]);
 
-  // Lógica de filtrado migrada de app.js
+  // 3. Filtrar productos (usando propiedades en inglés: name, description, category)
   const filteredProducts = products.filter(product => {
-    const matchesSearch = product.nombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                          product.descripcion.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                          (product.description && product.description.toLowerCase().includes(searchTerm.toLowerCase()));
     
-    const matchesCategory = categoryFilter === 'Todos' || product.categoria === categoryFilter;
+    const matchesCategory = categoryFilter === 'Todos' || product.category === categoryFilter;
 
     return matchesSearch && matchesCategory;
   });
 
+  if (loading) return <div className="text-center p-10 text-xl text-gray-600">Cargando catálogo...</div>;
+
   return (
     <div className="container mx-auto px-4 py-8">
-      <h2 className="text-4xl font-extrabold text-gray-800 mb-6">Catálogo de Parlantes</h2>
+      <h2 className="text-4xl font-extrabold text-gray-800 mb-6 text-center">Catálogo de Productos</h2>
+      
       <div className="flex flex-col md:flex-row gap-8">
         
-        {/* Filtros */}
-        <aside className="md:w-1/4 p-4 bg-white rounded-xl shadow-lg h-fit sticky top-[100px]">
-          {/* ... Implementación del filtro de búsqueda y categoría ... */}
+        {/* Barra Lateral de Filtros */}
+        <aside className="md:w-1/4 p-6 bg-white rounded-xl shadow-md h-fit sticky top-24">
+          <h3 className="text-xl font-bold mb-4 text-gray-700">Filtros</h3>
+          
           <div className="mb-6">
-            <label htmlFor="buscar-productos" className="block text-gray-700 font-medium mb-2">Buscar Producto</label>
+            <label htmlFor="buscar-productos" className="block text-gray-600 font-medium mb-2">Buscar</label>
             <input
               type="text"
               id="buscar-productos"
-              placeholder="Ej: JBL Flip 5"
+              placeholder="Ej: JBL, Sony..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full border border-gray-300 p-2 rounded-lg"
+              className="w-full border border-gray-300 p-2 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition"
             />
           </div>
 
           <div className="mb-4">
-            <label htmlFor="filtro-categoria" className="block text-gray-700 font-medium mb-2">Categoría</label>
+            <label htmlFor="filtro-categoria" className="block text-gray-600 font-medium mb-2">Categoría</label>
             <select
               id="filtro-categoria"
               value={categoryFilter}
               onChange={(e) => setCategoryFilter(e.target.value)}
-              className="w-full border border-gray-300 p-2 rounded-lg bg-white appearance-none"
+              className="w-full border border-gray-300 p-2 rounded-lg bg-white focus:ring-2 focus:ring-primary-500 outline-none transition cursor-pointer"
             >
               {categories.map(cat => (
                 <option key={cat} value={cat}>{cat}</option>
@@ -58,19 +84,19 @@ const ProductsView = () => {
           </div>
         </aside>
 
-        {/* Listado de Productos */}
+        {/* Rejilla de Productos */}
         <div className="md:w-3/4">
-          <div className="products-grid"> {/* Clase 'products-grid' migrada de styles.css */}
-            {filteredProducts.length > 0 ? (
-              filteredProducts.map(product => (
+          {filteredProducts.length > 0 ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {filteredProducts.map(product => (
                 <ProductCard key={product.id} product={product} />
-              ))
-            ) : (
-              <p className="md:col-span-3 text-center text-lg text-gray-500 p-10 bg-white rounded-lg shadow-inner">
-                No se encontraron productos que coincidan con los filtros aplicados.
-              </p>
-            )}
-          </div>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-10 bg-white rounded-xl shadow-inner">
+              <p className="text-gray-500 text-lg">No se encontraron productos que coincidan con tu búsqueda.</p>
+            </div>
+          )}
         </div>
       </div>
     </div>

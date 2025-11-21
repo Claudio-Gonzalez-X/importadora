@@ -3,7 +3,7 @@ module.exports = {
   content: ["./src/**/*.{js,jsx,ts,tsx}"],
   theme: {
     extend: {colors: {
-        // DEFINICIÓN DE COLORES PERSONALIZADOS (Migrado desde el script de index.html)
+       
         primary: {
           50: '#f0f9ff',
           100: '#e0f2fe',
@@ -11,7 +11,7 @@ module.exports = {
           300: '#7dd3fc',
           400: '#38bdf8',
           500: '#0ea5e9',
-          600: '#0284c7', // <-- ESTE COLOR ES USADO EN nav-link (hover:text-primary-600)
+          600: '#0284c7', 
           700: '#0369a1',
           800: '#075985',
           900: '#0c4a6e',
@@ -28,7 +28,7 @@ module.exports = {
           800: '#166534',
           900: '#14532d',
         },
-        // También debes agregar el color 'accent' que usas en el cart-badge, si lo usas.
+        
         accent: '#f59e0b',
       },},
   },

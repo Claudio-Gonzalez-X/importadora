@@ -1,61 +1,55 @@
-// src/components/CartItem.jsx
 import React from 'react';
 import { useCart } from '../context/CartContext';
 
 const CartItem = ({ item }) => {
-  const { eliminarDelCarrito, formatearPrecio, agregarAlCarrito } = useCart();
-  const { id, nombre, precio, imagenUrl, quantity } = item;
+  // 1. Usamos los nombres correctos del Contexto
+  const { eliminarDelCarrito, updateItemQuantity, formatearPrecio } = useCart();
   
-  const handleQuantityChange = (delta) => {
-    // Si la cantidad llega a 0 o menos, elimina el ítem
-    if (quantity + delta <= 0) {
-        eliminarDelCarrito(id);
-    } else {
-        // Usa agregarAlCarrito para simular la actualización de cantidad
-        agregarAlCarrito(item, delta); 
-    }
-  };
+  // 2. Desestructuramos usando 'quantity' (inglés) en lugar de 'cantidad'
+  const { id, name, price, image, quantity } = item;
 
   return (
-    <div className="flex items-center border-b border-gray-200 py-4 last:border-b-0">
+    <div className="flex flex-col sm:flex-row items-center justify-between p-4 border-b border-gray-200 bg-white rounded-lg shadow-sm mb-4 gap-4">
+      
       {/* Imagen y Nombre */}
-      <div className="flex items-center w-1/2">
-        <img src={imagenUrl} alt={nombre} className="w-16 h-16 object-cover rounded-md mr-4" />
-        <span className="font-medium text-gray-800">{nombre}</span>
+      <div className="flex items-center space-x-4 flex-1 w-full">
+        <img 
+          src={image || 'https://via.placeholder.com/150'} 
+          alt={name} 
+          className="w-20 h-20 object-cover rounded-md border border-gray-100" 
+        />
+        <div>
+          <h3 className="font-bold text-gray-800 text-lg">{name}</h3>
+          <p className="text-gray-500 text-sm">Unitario: {formatearPrecio(price)}</p>
+        </div>
       </div>
 
-      {/* Precio Unitario */}
-      <div className="w-1/6 text-center text-gray-600">
-        {formatearPrecio(precio)}
-      </div>
-
-      {/* Cantidad con Controles */}
-      <div className="w-1/6 flex justify-center items-center">
+      {/* Controles de Cantidad */}
+      <div className="flex items-center space-x-3 bg-gray-50 px-3 py-1 rounded-full border border-gray-200">
         <button 
-          onClick={() => handleQuantityChange(-1)}
-          className="btn-outline w-8 h-8 flex items-center justify-center text-sm"
+          // 3. Usamos 'updateItemQuantity' y 'quantity'
+          onClick={() => updateItemQuantity(id, quantity - 1)}
+          className="w-8 h-8 flex items-center justify-center text-gray-600 hover:text-blue-600 font-bold transition-colors"
         >
           -
         </button>
-        <span className="mx-3 w-6 text-center">{quantity}</span>
+        <span className="font-semibold w-6 text-center text-gray-800">{quantity}</span>
         <button 
-          onClick={() => handleQuantityChange(1)}
-          className="btn-outline w-8 h-8 flex items-center justify-center text-sm"
+          onClick={() => updateItemQuantity(id, quantity + 1)}
+          className="w-8 h-8 flex items-center justify-center text-gray-600 hover:text-blue-600 font-bold transition-colors"
         >
           +
         </button>
       </div>
 
-      {/* Subtotal */}
-      <div className="w-1/6 text-right font-semibold text-gray-800">
-        {formatearPrecio(precio * quantity)}
-      </div>
-
-      {/* Eliminar */}
-      <div className="w-auto ml-4">
+      {/* Subtotal y Eliminar */}
+      <div className="flex items-center justify-between sm:justify-end w-full sm:w-auto gap-6">
+        <p className="font-bold text-lg text-blue-600 min-w-[100px] text-right">
+          {formatearPrecio(price * quantity)}
+        </p>
         <button 
           onClick={() => eliminarDelCarrito(id)}
-          className="text-red-500 hover:text-red-700"
+          className="text-gray-400 hover:text-red-500 transition-colors p-2 rounded-full hover:bg-red-50"
           title="Eliminar producto"
         >
           <i className="fas fa-trash-alt"></i>
