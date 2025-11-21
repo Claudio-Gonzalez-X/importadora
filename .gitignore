@@ -22,9 +22,7 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# ... contenido existente ...
 
-# Agrega esto al final:
 .env
 .env.local
 .env.development.local
