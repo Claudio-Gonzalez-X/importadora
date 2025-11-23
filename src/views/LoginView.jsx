@@ -19,7 +19,7 @@ const LoginView = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    setFormData(prev => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = async (e) => {
@@ -27,7 +27,7 @@ const LoginView = () => {
     clearMessage();
 
     if (!formData.email || !formData.password) {
-      showMessage("error", "Debe completar todos los campos.");
+      showMessage("error", "Por favor completa todos los campos.");
       return;
     }
 
@@ -43,7 +43,7 @@ const LoginView = () => {
 
     } catch (error) {
       console.error(error);
-      showMessage("error", "Email o contraseña incorrectos.");
+      showMessage("error", "Correo o contraseña incorrectos.");
     } finally {
       setLoading(false);
     }
@@ -52,11 +52,7 @@ const LoginView = () => {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 p-4 relative">
       {message && (
-        <MessageComponent
-          type={message.type}
-          text={message.text}
-          onClose={clearMessage}
-        />
+        <MessageComponent type={message.type} text={message.text} onClose={clearMessage} />
       )}
       <div className="bg-white p-8 rounded-xl shadow-2xl w-full max-w-sm">
         <h2 className="text-3xl font-extrabold text-primary-700 text-center mb-6 border-b pb-3">
@@ -64,20 +60,18 @@ const LoginView = () => {
         </h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
-            <label className="block text-gray-700 font-medium mb-2">Email</label>
+            <label className="block text-gray-700 font-medium mb-2">Correo electrónico</label>
             <input
               type="email"
               name="email"
               value={formData.email}
               onChange={handleChange}
               className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:border-primary-500 focus:ring-primary-500"
-              placeholder="correo@ejemplo.com"
+              placeholder="ejemplo@correo.com"
             />
           </div>
           <div className="mb-6">
-            <label className="block text-gray-700 font-medium mb-2">
-              Contraseña
-            </label>
+            <label className="block text-gray-700 font-medium mb-2">Contraseña</label>
             <input
               type="password"
               name="password"

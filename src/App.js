@@ -49,7 +49,7 @@ function App() {
               }
             />
 
-            {/* 404 */}
+            {/* Página 404 */}
             <Route
               path="*"
               element={

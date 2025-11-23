@@ -11,7 +11,7 @@ const RegisterView = () => {
     email: "",
     password: "",
     confirmPassword: "",
-    role: "usuario", // Por defecto comprador
+    role: "usuario",
   });
   const [message, setMessage] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -24,12 +24,12 @@ const RegisterView = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    setFormData(prev => ({ ...prev, [name]: value }));
   };
 
   const validateForm = () => {
     if (!formData.email || !formData.password || !formData.confirmPassword)
-      return "Debe completar todos los campos.";
+      return "Por favor completa todos los campos.";
     if (formData.password.length < 6)
       return "La contraseña debe tener al menos 6 caracteres.";
     if (formData.password !== formData.confirmPassword)
@@ -49,12 +49,12 @@ const RegisterView = () => {
 
     try {
       setLoading(true);
-      const user = await register(formData.email, formData.password, formData.role);
+      await register(formData.email, formData.password, formData.role);
       showMessage("success", "Registro exitoso. Redirigiendo...");
 
-      // Redirigir según rol
-      if (formData.role === "admin") navigate("/admin");
-      else if (formData.role === "importador") navigate("/panel");
+      const role = formData.role;
+      if (role === "admin") navigate("/admin");
+      else if (role === "importador") navigate("/panel");
       else navigate("/");
 
     } catch (error) {
@@ -70,23 +70,20 @@ const RegisterView = () => {
       {message && (
         <MessageComponent type={message.type} text={message.text} onClose={clearMessage} />
       )}
-
       <div className="bg-white p-8 rounded-xl shadow-2xl w-full max-w-md">
         <h2 className="text-3xl font-extrabold text-primary-700 text-center mb-6 border-b pb-3">
           Registro de Usuario
         </h2>
-
         <form onSubmit={handleSubmit}>
-
           <div className="mb-4">
-            <label className="block text-gray-700 font-medium mb-2">Email</label>
+            <label className="block text-gray-700 font-medium mb-2">Correo electrónico</label>
             <input
               type="email"
               name="email"
               value={formData.email}
               onChange={handleChange}
               className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:border-primary-500 focus:ring-primary-500"
-              placeholder="correo@ejemplo.com"
+              placeholder="ejemplo@correo.com"
             />
           </div>
 
@@ -103,9 +100,7 @@ const RegisterView = () => {
           </div>
 
           <div className="mb-4">
-            <label className="block text-gray-700 font-medium mb-2">
-              Confirmar Contraseña
-            </label>
+            <label className="block text-gray-700 font-medium mb-2">Confirmar contraseña</label>
             <input
               type="password"
               name="confirmPassword"
@@ -117,9 +112,7 @@ const RegisterView = () => {
           </div>
 
           <div className="mb-6">
-            <label className="block text-gray-700 font-medium mb-2">
-              Tipo de Usuario
-            </label>
+            <label className="block text-gray-700 font-medium mb-2">Tipo de usuario</label>
             <select
               name="role"
               value={formData.role}
@@ -128,7 +121,7 @@ const RegisterView = () => {
             >
               <option value="usuario">Comprador</option>
               <option value="importador">Importador</option>
-              <option value="admin">Admin</option>
+              <option value="admin">Administrador</option>
             </select>
           </div>
 
@@ -147,7 +140,7 @@ const RegisterView = () => {
             onClick={() => navigate("/login")}
             className="text-primary-600 font-semibold cursor-pointer hover:underline"
           >
-            Inicia Sesión
+            Inicia sesión
           </span>
         </p>
       </div>
