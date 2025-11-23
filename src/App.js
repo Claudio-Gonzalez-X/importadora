@@ -1,7 +1,6 @@
 import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { CartProvider } from "./context/CartContext";
-
 import { AuthProvider } from "./context/AuthContext";
 
 import Navbar from "./components/Navbar";
@@ -21,16 +20,15 @@ function App() {
     <AuthProvider>
       <CartProvider>
         <BrowserRouter>
-
           <Navbar />
 
           <Routes>
+            {/* Páginas públicas */}
             <Route path="/" element={<HomeView />} />
             <Route path="/productos" element={<ProductsView />} />
             <Route path="/carrito" element={<CartView />} />
-
             <Route path="/login" element={<LoginView />} />
-            <Route path="/register" element={<RegisterView />} />
+            <Route path="/registro" element={<RegisterView />} />
 
             {/* Rutas protegidas */}
             <Route
@@ -54,10 +52,13 @@ function App() {
             {/* 404 */}
             <Route
               path="*"
-              element={<div className="p-20 text-center text-3xl">404</div>}
+              element={
+                <div className="p-20 text-center text-3xl font-bold text-gray-700">
+                  404 | Página no encontrada
+                </div>
+              }
             />
           </Routes>
-
         </BrowserRouter>
       </CartProvider>
     </AuthProvider>
