@@ -1,35 +1,66 @@
-import React from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { CartProvider } from './context/CartContext';
+import React from "react";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { CartProvider } from "./context/CartContext";
 
-// Importamos tus vistas
-import HomeView from './views/HomeView';
-import ProductsView from './views/ProductsView';
-import CartView from './views/CartView';
-import Navbar from './components/Navbar'; // Crearemos este componente en el paso 2
+import { AuthProvider } from "./context/AuthContext";
+
+import Navbar from "./components/Navbar";
+import HomeView from "./views/HomeView";
+import ProductsView from "./views/ProductsView";
+import CartView from "./views/CartView";
+import LoginView from "./views/LoginView";
+import RegisterView from "./views/RegisterView";
+
+import AdminDashboard from "./views/AdminDashboard";
+import ImportadorDashboard from "./views/ImportadorDashboard";
+
+import ProtectedRoute from "./routes/ProtectedRoute";
 
 function App() {
   return (
-    <CartProvider>
-      <BrowserRouter>
-        {/* La Navbar va fuera de Routes para que se vea en todas las páginas */}
-        <Navbar /> 
-        
-        <Routes>
-          {/* Ruta para el Inicio */}
-          <Route path="/" element={<HomeView />} />
-          
-          {/* Ruta para el Catálogo (Esta es la que te falta) */}
-          <Route path="/productos" element={<ProductsView />} />
-          
-          {/* Ruta para el Carrito */}
-          <Route path="/carrito" element={<CartView />} />
-          
-          {/* Ruta para páginas no encontradas */}
-          <Route path="*" element={<div className="text-center py-20 text-2xl">404 - Página no encontrada</div>} />
-        </Routes>
-      </BrowserRouter>
-    </CartProvider>
+    <AuthProvider>
+      <CartProvider>
+        <BrowserRouter>
+
+          <Navbar />
+
+          <Routes>
+            <Route path="/" element={<HomeView />} />
+            <Route path="/productos" element={<ProductsView />} />
+            <Route path="/carrito" element={<CartView />} />
+
+            <Route path="/login" element={<LoginView />} />
+            <Route path="/register" element={<RegisterView />} />
+
+            {/* Rutas protegidas */}
+            <Route
+              path="/admin"
+              element={
+                <ProtectedRoute allowedRoles={["admin"]}>
+                  <AdminDashboard />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/panel"
+              element={
+                <ProtectedRoute allowedRoles={["importador"]}>
+                  <ImportadorDashboard />
+                </ProtectedRoute>
+              }
+            />
+
+            {/* 404 */}
+            <Route
+              path="*"
+              element={<div className="p-20 text-center text-3xl">404</div>}
+            />
+          </Routes>
+
+        </BrowserRouter>
+      </CartProvider>
+    </AuthProvider>
   );
 }
 
