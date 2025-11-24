@@ -1,39 +1,42 @@
 import React, { useState, useEffect } from 'react';
-// Importa TODAS las funciones de servicio, incluyendo la nueva
 import { addProduct, updateProduct, getUniqueCategories } from '../services/products'; 
-import Swal from 'sweetalert2'; // Asumo que usas SweetAlert2 para mensajes
+import Swal from 'sweetalert2'; 
 
-const AdminProductModal = ({ productToEdit, onClose, onSave }) => {
+const AdminProductModal = ({ productToEdit, onClose, onSave, isOpen }) => {
     const isEditMode = !!productToEdit;
     
-    // 1. Estado inicial del formulario
+    // 1. LLAMADA A TODOS LOS HOOKS PRIMERO (Esto debe ir antes del return condicional)
     const [formData, setFormData] = useState({ 
         name: productToEdit?.name || '',
         price: productToEdit?.price || 0,
         stock: productToEdit?.stock || 0,
-        category: productToEdit?.category || '', // Campo clave
+        category: productToEdit?.category || '', 
         image: productToEdit?.image || '',
         description: productToEdit?.description || '',
     });
     
-    // 2. Estado para almacenar la lista de categorías existentes
     const [availableCategories, setAvailableCategories] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
 
-    // 3. Efecto para cargar las categorías disponibles (USANDO EL NUEVO SERVICIO)
+    // 2. useEffect también debe ir antes
     useEffect(() => {
         const loadCategories = async () => {
             const categories = await getUniqueCategories();
             setAvailableCategories(categories);
         };
         loadCategories();
-    }, []);
+    }, [isOpen]); // Añadir isOpen a las dependencias por si el modal se abre/cierra
+
+    // **CORRECCIÓN CLAVE:** El return condicional va AQUÍ, después de todos los Hooks
+    if (!isOpen) {
+        return null;
+    }
 
     // Manejador genérico de cambios en el formulario
     const handleChange = (e) => {
         const { name, value } = e.target;
-        // Asegúrate de convertir price y stock a número si no son cadenas vacías
+        
         const newValue = (name === 'price' || name === 'stock') ? parseFloat(value) : value;
 
         setFormData(prev => ({ 
@@ -64,7 +67,8 @@ const AdminProductModal = ({ productToEdit, onClose, onSave }) => {
                 showConfirmButton: false
             });
 
-            onSave(); // Llama a la función para cerrar el modal y refrescar la vista
+            onClose(); 
+            onSave(); 
         } catch (err) {
             console.error("Error al guardar producto:", err);
             setError(err.message || "Error desconocido al guardar el producto.");
@@ -79,7 +83,6 @@ const AdminProductModal = ({ productToEdit, onClose, onSave }) => {
     };
     
     return (
-        // Estilos básicos de modal (Ajustar a tus estilos de Tailwind/CSS)
         <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-center items-center p-4">
             <div className="bg-white p-6 rounded-lg shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
                 <h3 className="text-2xl font-bold mb-4 text-gray-800">
