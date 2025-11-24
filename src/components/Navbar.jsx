@@ -29,44 +29,48 @@ const Navbar = () => {
             </span>
           </Link>
 
-          {/* MENÚ ESCRITORIO */}
+          {/* DESKTOP MENU */}
           <div className="hidden sm:flex items-center space-x-4">
             <Link to="/" className="hover:text-blue-400 transition">Inicio</Link>
             <Link to="/productos" className="hover:text-blue-400 transition">Catálogo</Link>
 
             {user && userRole === "admin" && (
-              <Link to="/admin" className="hover:text-yellow-400 transition">Administrador</Link>
+              <Link to="/admin" className="hover:text-yellow-400 transition">Admin</Link>
             )}
             {user && userRole === "importador" && (
-              <Link to="/panel" className="hover:text-green-400 transition">Panel del Importador</Link>
+              <Link to="/panel" className="hover:text-green-400 transition">Mi Panel</Link>
             )}
 
             <Link to="/carrito" className="relative">
-              <i className="fas fa-shopping-cart text-xl" aria-hidden="true"></i>
+              <i className="fas fa-shopping-cart text-xl"></i>
               {totalItems > 0 && (
                 <span className="absolute top-0 right-0 bg-red-600 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
                   {totalItems}
                 </span>
               )}
-              <span className="sr-only">Carrito de compras</span>
             </Link>
 
             {!user ? (
               <Link to="/login" className="hover:text-blue-400 transition">Ingresar</Link>
             ) : (
-              <button onClick={handleLogout} className="hover:text-red-400 transition">
-                Salir
-              </button>
+              <div className="flex items-center gap-4">
+                {userRole === "usuario" && (
+                  <span className="text-gray-200 truncate max-w-xs">{user.email}</span>
+                )}
+                <button onClick={handleLogout} className="hover:text-red-400 transition">
+                  Salir
+                </button>
+              </div>
             )}
           </div>
 
-          {/* BOTÓN MÓVIL */}
+          {/* MOBILE BUTTON */}
           <div className="sm:hidden flex items-center">
             <button
               type="button"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none"
-              aria-label={isMobileMenuOpen ? "Cerrar menú móvil" : "Abrir menú móvil"}
+              aria-label={isMobileMenuOpen ? "Cerrar menú" : "Abrir menú"}
               aria-expanded={isMobileMenuOpen}
             >
               <i className={`fas ${isMobileMenuOpen ? "fa-times" : "fa-bars"} text-2xl`}></i>
@@ -75,17 +79,17 @@ const Navbar = () => {
         </div>
       </div>
 
-      {/* MENÚ MÓVIL */}
+      {/* MOBILE MENU */}
       {isMobileMenuOpen && (
         <div className="sm:hidden bg-gray-800 px-4 py-4 space-y-2">
           <Link onClick={() => setIsMobileMenuOpen(false)} to="/" className="block hover:text-blue-400 transition">Inicio</Link>
           <Link onClick={() => setIsMobileMenuOpen(false)} to="/productos" className="block hover:text-blue-400 transition">Catálogo</Link>
 
           {user && userRole === "admin" && (
-            <Link onClick={() => setIsMobileMenuOpen(false)} to="/admin" className="block hover:text-yellow-400 transition">Administrador</Link>
+            <Link onClick={() => setIsMobileMenuOpen(false)} to="/admin" className="block hover:text-yellow-400 transition">Admin</Link>
           )}
           {user && userRole === "importador" && (
-            <Link onClick={() => setIsMobileMenuOpen(false)} to="/panel" className="block hover:text-green-400 transition">Panel del Importador</Link>
+            <Link onClick={() => setIsMobileMenuOpen(false)} to="/panel" className="block hover:text-green-400 transition">Mi Panel</Link>
           )}
 
           <Link onClick={() => setIsMobileMenuOpen(false)} to="/carrito" className="block hover:text-red-400 transition">
@@ -95,9 +99,14 @@ const Navbar = () => {
           {!user ? (
             <Link onClick={() => setIsMobileMenuOpen(false)} to="/login" className="block hover:text-blue-400 transition">Ingresar</Link>
           ) : (
-            <button onClick={handleLogout} className="block text-left w-full hover:text-red-400 transition">
-              Salir
-            </button>
+            <div className="flex flex-col gap-2">
+              {userRole === "usuario" && (
+                <span className="text-gray-200 truncate">{user.email}</span>
+              )}
+              <button onClick={handleLogout} className="block text-left w-full hover:text-red-400 transition">
+                Salir
+              </button>
+            </div>
           )}
         </div>
       )}

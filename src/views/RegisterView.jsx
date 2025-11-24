@@ -11,7 +11,7 @@ const RegisterView = () => {
     email: "",
     password: "",
     confirmPassword: "",
-    role: "usuario",
+    role: "usuario", // Por defecto comprador
   });
   const [message, setMessage] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -29,7 +29,7 @@ const RegisterView = () => {
 
   const validateForm = () => {
     if (!formData.email || !formData.password || !formData.confirmPassword)
-      return "Por favor completa todos los campos.";
+      return "Debe completar todos los campos.";
     if (formData.password.length < 6)
       return "La contraseña debe tener al menos 6 caracteres.";
     if (formData.password !== formData.confirmPassword)
@@ -52,9 +52,9 @@ const RegisterView = () => {
       await register(formData.email, formData.password, formData.role);
       showMessage("success", "Registro exitoso. Redirigiendo...");
 
-      const role = formData.role;
-      if (role === "admin") navigate("/admin");
-      else if (role === "importador") navigate("/panel");
+      // Redirigir según rol
+      if (formData.role === "admin") navigate("/admin");
+      else if (formData.role === "importador") navigate("/panel");
       else navigate("/");
 
     } catch (error) {
@@ -70,20 +70,22 @@ const RegisterView = () => {
       {message && (
         <MessageComponent type={message.type} text={message.text} onClose={clearMessage} />
       )}
+
       <div className="bg-white p-8 rounded-xl shadow-2xl w-full max-w-md">
         <h2 className="text-3xl font-extrabold text-primary-700 text-center mb-6 border-b pb-3">
           Registro de Usuario
         </h2>
+
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
-            <label className="block text-gray-700 font-medium mb-2">Correo electrónico</label>
+            <label className="block text-gray-700 font-medium mb-2">Email</label>
             <input
               type="email"
               name="email"
               value={formData.email}
               onChange={handleChange}
               className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:border-primary-500 focus:ring-primary-500"
-              placeholder="ejemplo@correo.com"
+              placeholder="correo@ejemplo.com"
             />
           </div>
 
@@ -100,7 +102,7 @@ const RegisterView = () => {
           </div>
 
           <div className="mb-4">
-            <label className="block text-gray-700 font-medium mb-2">Confirmar contraseña</label>
+            <label className="block text-gray-700 font-medium mb-2">Confirmar Contraseña</label>
             <input
               type="password"
               name="confirmPassword"
@@ -112,7 +114,7 @@ const RegisterView = () => {
           </div>
 
           <div className="mb-6">
-            <label className="block text-gray-700 font-medium mb-2">Tipo de usuario</label>
+            <label className="block text-gray-700 font-medium mb-2">Tipo de Usuario</label>
             <select
               name="role"
               value={formData.role}
@@ -121,7 +123,7 @@ const RegisterView = () => {
             >
               <option value="usuario">Comprador</option>
               <option value="importador">Importador</option>
-              <option value="admin">Administrador</option>
+              <option value="admin">Admin</option>
             </select>
           </div>
 
@@ -140,7 +142,7 @@ const RegisterView = () => {
             onClick={() => navigate("/login")}
             className="text-primary-600 font-semibold cursor-pointer hover:underline"
           >
-            Inicia sesión
+            Inicia Sesión
           </span>
         </p>
       </div>
