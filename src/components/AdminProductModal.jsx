@@ -2,41 +2,60 @@ import React, { useState, useEffect } from 'react';
 import { addProduct, updateProduct, getUniqueCategories } from '../services/products'; 
 import Swal from 'sweetalert2'; 
 
-const AdminProductModal = ({ productToEdit, onClose, onSave, isOpen }) => {
-    const isEditMode = !!productToEdit;
+// 1. CAMBIO AQUÍ: Ahora recibimos "product" en lugar de "productToEdit"
+const AdminProductModal = ({ product, onClose, onSave, isOpen }) => {
+    const isEditMode = !!product;
     
-    // 1. LLAMADA A TODOS LOS HOOKS PRIMERO (Esto debe ir antes del return condicional)
-    const [formData, setFormData] = useState({ 
-        name: productToEdit?.name || '',
-        price: productToEdit?.price || 0,
-        stock: productToEdit?.stock || 0,
-        category: productToEdit?.category || '', 
-        image: productToEdit?.image || '',
-        description: productToEdit?.description || '',
-    });
-    
+    // Estado inicial del formulario vacío
+    const initialFormState = { 
+        name: '',
+        price: 0,
+        stock: 0,
+        category: '', 
+        image: '',
+        description: '',
+    };
+
+    const [formData, setFormData] = useState(initialFormState);
     const [availableCategories, setAvailableCategories] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
 
-    // 2. useEffect también debe ir antes
+    // 2. NUEVO: Este efecto rellena el formulario cuando se abre el modal o cambia el producto
+    useEffect(() => {
+        if (isOpen && product) {
+            // Si hay un producto, rellenamos el formulario con sus datos
+            setFormData({
+                name: product.name || '',
+                price: product.price || 0,
+                stock: product.stock || 0,
+                category: product.category || '',
+                image: product.image || '',
+                description: product.description || '',
+            });
+        } else if (isOpen && !product) {
+            // Si es "Agregar Nuevo", limpiamos el formulario
+            setFormData(initialFormState);
+        }
+    }, [isOpen, product]); // Se ejecuta cada vez que se abre el modal o cambia el producto
+
+    // Cargar categorías
     useEffect(() => {
         const loadCategories = async () => {
             const categories = await getUniqueCategories();
-            setAvailableCategories(categories);
+            const uniqueCats = [...new Set(categories)];
+            setAvailableCategories(uniqueCats);
         };
-        loadCategories();
-    }, [isOpen]); // Añadir isOpen a las dependencias por si el modal se abre/cierra
+        if (isOpen) {
+            loadCategories();
+        }
+    }, [isOpen]); 
 
-    // **CORRECCIÓN CLAVE:** El return condicional va AQUÍ, después de todos los Hooks
-    if (!isOpen) {
-        return null;
-    }
+    if (!isOpen) return null;
 
-    // Manejador genérico de cambios en el formulario
     const handleChange = (e) => {
         const { name, value } = e.target;
-        
+        // Convertir a número si es precio o stock
         const newValue = (name === 'price' || name === 'stock') ? parseFloat(value) : value;
 
         setFormData(prev => ({ 
@@ -45,7 +64,6 @@ const AdminProductModal = ({ productToEdit, onClose, onSave, isOpen }) => {
         }));
     };
 
-    // Manejador del guardado
     const handleSave = async (e) => {
         e.preventDefault();
         setError(null);
@@ -54,7 +72,8 @@ const AdminProductModal = ({ productToEdit, onClose, onSave, isOpen }) => {
         try {
             let result;
             if (isEditMode) {
-                result = await updateProduct(productToEdit.id, formData);
+                // Usamos product.id porque ahora la prop se llama "product"
+                result = await updateProduct(product.id, formData);
             } else {
                 result = await addProduct(formData);
             }
@@ -68,7 +87,7 @@ const AdminProductModal = ({ productToEdit, onClose, onSave, isOpen }) => {
             });
 
             onClose(); 
-            onSave(); 
+            onSave(result); // Pasamos el resultado por si se necesita arriba
         } catch (err) {
             console.error("Error al guardar producto:", err);
             setError(err.message || "Error desconocido al guardar el producto.");
@@ -98,7 +117,7 @@ const AdminProductModal = ({ productToEdit, onClose, onSave, isOpen }) => {
                         <input type="text" id="name" name="name" value={formData.name} onChange={handleChange} className="w-full border border-gray-300 p-2 rounded-lg" required />
                     </div>
 
-                    {/* CAMPO CLAVE: Categoría (Input + Datalist) */}
+                    {/* CAMPO: Categoría */}
                     <div className="mb-4">
                         <label htmlFor="category" className="block text-sm font-medium text-gray-700 mb-2">Categoría</label>
                         <input
@@ -112,10 +131,9 @@ const AdminProductModal = ({ productToEdit, onClose, onSave, isOpen }) => {
                             className="w-full border border-gray-300 p-2 rounded-lg"
                             required
                         />
-                        {/* Datalist: Opciones que aparecen al escribir */}
                         <datalist id="category-options">
-                            {availableCategories.map(cat => (
-                                <option key={cat} value={cat} /> 
+                            {availableCategories.map((cat, index) => (
+                                <option key={`${cat}-${index}`} value={cat} /> 
                             ))}
                         </datalist>
                     </div>
@@ -149,7 +167,7 @@ const AdminProductModal = ({ productToEdit, onClose, onSave, isOpen }) => {
                             Cancelar
                         </button>
                         <button type="submit" disabled={loading} className="bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-4 rounded transition disabled:bg-indigo-400">
-                            {loading ? 'Guardando...' : 'Guardar Producto'}
+                            {loading ? 'Guardando...' : 'Guardar Cambios'}
                         </button>
                     </div>
                 </form>

@@ -4,7 +4,6 @@ import { useCart } from '../context/CartContext';
 const ProductCard = ({ product }) => {
   const { agregarAlCarrito, formatearPrecio } = useCart();
   
-  // DESESTRUCTURACIÓN CON NOMBRES EN INGLÉS (Database)
   const { 
     name, 
     description, 
@@ -17,6 +16,18 @@ const ProductCard = ({ product }) => {
   
   const isSinStock = stock === 0;
 
+  // --- SOLUCIÓN PARA LAS IMÁGENES ---
+  // Esta función asegura que la ruta siempre sea correcta
+  const getImageUrl = (imgPath) => {
+    if (!imgPath) return 'https://via.placeholder.com/300'; // Si es null
+    if (imgPath.startsWith('http')) return imgPath; // Si es una URL externa
+    if (imgPath.startsWith('/')) return imgPath; // Si ya tiene el slash correcto
+    
+    // Si viene como "img/camara.jpg", le agregamos el "/" -> "/img/camara.jpg"
+    return `/${imgPath}`; 
+  };
+  // ----------------------------------
+
   return (
     <div className="bg-white rounded-xl shadow-lg hover:shadow-xl overflow-hidden transition-all duration-300 transform hover:-translate-y-1 flex flex-col h-full">
       <div className="relative overflow-hidden h-48">
@@ -28,9 +39,12 @@ const ProductCard = ({ product }) => {
         )}
         
         <img 
-          src={image || 'https://via.placeholder.com/300'} 
+          // USAMOS LA NUEVA FUNCIÓN AQUÍ
+          src={getImageUrl(image)} 
           alt={name} 
           className="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
+          // Opcional: Manejo de error si la imagen realmente no existe
+          onError={(e) => { e.target.src = 'https://via.placeholder.com/300?text=Sin+Imagen'; }}
         />
       </div>
 
