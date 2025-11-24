@@ -1,70 +1,53 @@
-# Getting Started with Create React App
+# Importadora GonSeg - E-commerce Web Application
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Este proyecto consiste en una aplicación web de comercio electrónico desarrollada para la gestión de productos, ventas y usuarios de "Importadora GonSeg". La plataforma permite la interacción de tres roles diferenciados: Administradores, Importadores y Clientes finales.
 
-## Available Scripts
+## 🛠 Argumentación Técnica (Stack Tecnológico)
 
-In the project directory, you can run:
+Para el desarrollo de esta solución se seleccionó una arquitectura **SPA (Single Page Application)** basada en **JavaScript**, priorizando la experiencia de usuario y la escalabilidad.
 
-### `npm start`
+### 1. Frontend: React.js (v19)
+Se eligió **React** como biblioteca principal debido a su arquitectura basada en componentes, lo que facilita la reutilización de código y el mantenimiento.
+- **Gestión de Estado:** Se implementó `Context API` (`AuthContext` y `CartContext`) para manejar el estado global de la sesión del usuario y el carrito de compras sin necesidad de librerías externas pesadas (Redux), optimizando el rendimiento.
+- **Enrutamiento:** Uso de `react-router-dom` para una navegación fluida sin recargas de página, mejorando la UX.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+### 2. Diseño y Responsividad: Tailwind CSS
+Para cumplir con los requerimientos de **adaptabilidad a dispositivos móviles (Mobile First)**, se utilizó **Tailwind CSS**.
+- **Justificación:** A diferencia de CSS puro o Bootstrap, Tailwind permite construir interfaces personalizadas rápidamente mediante clases utilitarias.
+- **Implementación Responsiva:** Se utilizaron breakpoints (`sm:`, `md:`, `lg:`) en componentes críticos como el `Navbar` (que cambia de menú horizontal a menú hamburguesa) y la grilla de productos (`grid-cols-1` a `grid-cols-4`), asegurando que la aplicación sea totalmente funcional en celulares, tablets y escritorios.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+### 3. Backend & Base de Datos: Supabase
+Se optó por **Supabase** como solución BaaS (Backend as a Service).
+- **Base de Datos:** PostgreSQL para la persistencia de datos relacional (productos, usuarios).
+- **Autenticación:** Gestión segura de usuarios y roles (`admin`, `importador`, `usuario`) mediante `Supabase Auth`.
 
-### `npm test`
+---
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## 🚀 Instalación y Despliegue
 
-### `npm run build`
+Sigue estos pasos para ejecutar el proyecto en local:
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+1. **Clonar el repositorio:**
+    
+    git clone <URL_DEL_REPOSITORIO>
+    cd migracion-react
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-### `npm run eject`
+2. **Instalar dependencias:**
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+    npm install
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+    Nota: Las dependencias principales se encuentran detalladas en el package.json.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+3. **Variables de entorno:**
 
-## Learn More
+    Crea un archivo .env en la raíz y agrega tus credenciales de Supabase:
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+    REACT_APP_SUPABASE_URL=tu_url_aqui
+    REACT_APP_SUPABASE_ANON_KEY=tu_key_aqui
 
-To learn React, check out the [React documentation](https://reactjs.org/).
 
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+4. **Ejecutar el servidor de desarollo:**
+    npm start

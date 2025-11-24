@@ -51,21 +51,31 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const register = async (email, password, role = "importador") => {
+const register = async (email, password, role = "importador") => {
     try {
       const { data, error } = await supabase.auth.signUp({
         email,
         password,
         options: { data: { role } },
       });
+      
       if (error) throw error;
-      return data.user;
+
+      // FIX: Si Supabase nos loguea automáticamente (Auto Confirm ON),
+      // actualizamos el estado aquí mismo para evitar race conditions.
+      if (data.session) {
+          setUser(data.user);
+          setRole(data.user.user_metadata?.role || role);
+      }
+
+      // Retornamos user Y session para verificar en la vista
+      return { user: data.user, session: data.session };
     } catch (err) {
       console.error("Error register:", err);
       throw err;
     }
   };
-
+  
   const logout = async () => {
     try {
       await supabase.auth.signOut();

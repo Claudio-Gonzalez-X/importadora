@@ -78,3 +78,44 @@ export const getUniqueCategories = async () => {
   if (error) return [];
   return data.map((item) => item.category).filter(Boolean);
 };
+
+
+/**
+ * Obtiene métricas clave de inventario y la lista de productos con stock bajo.
+ * @returns {object} { criticalStock: Array, totalInventoryValue: number, totalProducts: number }
+ */
+export const getInventoryReport = async () => {
+    try {
+        // 1. Obtener todos los productos para cálculos del lado del cliente
+        const { data: allProducts, error } = await supabase
+            .from('products')
+            .select('id, name, price, stock, category')
+            .not('stock', 'is', null); // Asegurarse de que stock no sea nulo
+
+        if (error) throw error;
+        if (!allProducts) return { criticalStock: [], totalInventoryValue: 0, totalProducts: 0 };
+
+        const LOW_STOCK_THRESHOLD = 5; // Umbral crítico
+
+        // 2. Reporte de Inventario Crítico (Reporte 1)
+        const criticalStock = allProducts.filter(p => p.stock <= LOW_STOCK_THRESHOLD);
+
+        // 3. Reporte de Valor Total del Inventario (Reporte 2)
+        const totalInventoryValue = allProducts.reduce((sum, p) => {
+            return sum + (p.price * p.stock);
+        }, 0);
+
+        // 4. Reporte de Conteo de Productos (Base para Reporte 3)
+        const totalProducts = allProducts.length;
+
+        return {
+            criticalStock,
+            totalInventoryValue,
+            totalProducts,
+        };
+
+    } catch (err) {
+        console.error("Error al obtener el reporte de inventario:", err);
+        throw new Error("No se pudo generar el reporte de inventario.");
+    }
+};

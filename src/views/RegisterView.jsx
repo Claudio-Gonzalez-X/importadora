@@ -37,7 +37,7 @@ const RegisterView = () => {
     return null;
   };
 
-  const handleSubmit = async (e) => {
+const handleSubmit = async (e) => {
     e.preventDefault();
     clearMessage();
 
@@ -49,19 +49,34 @@ const RegisterView = () => {
 
     try {
       setLoading(true);
-      await register(formData.email, formData.password, formData.role);
-      showMessage("success", "Registro exitoso. Redirigiendo...");
+      // Recibimos user y session del nuevo register
+      const { user, session } = await register(formData.email, formData.password, formData.role);
 
-      // Redirigir según rol
-      if (formData.role === "admin") navigate("/admin");
-      else if (formData.role === "importador") navigate("/panel");
-      else navigate("/");
+      if (session) {
+        // CASO A: Login automático (Email confirmation OFF en Supabase)
+        showMessage("success", "Registro exitoso. Redirigiendo...");
+        
+        // Pequeña pausa para asegurar que el Contexto se propagó
+        setTimeout(() => {
+            if (formData.role === "admin") navigate("/admin");
+            else if (formData.role === "importador") navigate("/panel");
+            else navigate("/");
+        }, 500); 
+
+      } else if (user) {
+        // CASO B: Requiere confirmación de email (Default de Supabase)
+        // NO NAVEGAMOS. Si navegas aquí, la app crashea porque no hay usuario logueado.
+        showMessage("success", "Cuenta creada. ¡Revisa tu correo para confirmar tu cuenta!", false);
+        setLoading(false); // Quitamos loading, nos quedamos en el formulario
+      }
 
     } catch (error) {
       console.error(error);
       showMessage("error", error.message || "No se pudo registrar el usuario.");
     } finally {
-      setLoading(false);
+        // Solo quitamos loading si no entramos en el if(session)
+        // Si hay sesión, dejamos loading true mientras redirige para que no parpadee
+        if (!formData.email) setLoading(false); 
     }
   };
 
