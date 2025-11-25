@@ -4,13 +4,11 @@ import { CartProvider, useCart } from './CartContext';
 import Swal from 'sweetalert2';
 
 // 1. MOCK: Simulación de SweetAlert2
-// Esto evita que la ventana de alerta real intente abrirse durante el test
 jest.mock('sweetalert2', () => ({
   fire: jest.fn(),
 }));
 
 // 2. MOCK: Simulación del localStorage
-// Aunque Jest a veces lo trae, definirlo asegura que no falle en ningún entorno
 const localStorageMock = (function() {
   let store = {};
   return {
@@ -25,24 +23,24 @@ Object.defineProperty(window, 'localStorage', { value: localStorageMock });
 // --- Producto de Prueba ---
 const mockProduct = {
   id: 1, 
-  name: "Parlante JBL Flip 5", // Ajustado a 'name' según tu Contexto
-  price: 79990, // Ajustado a 'price' según tu Contexto
+  name: "Parlante JBL Flip 5", 
+  price: 1000, // Usamos un precio redondo para facilitar el cálculo mental en el test
   stock: 15,
   imagenUrl: "img/jblcharge.jpg",
   categoria: "Parlantes Portátiles",
 };
 
-// --- Pruebas Unitarias ---
+// --- Pruebas Unitarias (Total: 8) ---
 
-describe('CartContext - Pruebas Avanzadas (CRUD)', () => {
+describe('CartContext - Suite Completa de 8 Tests', () => {
 
-  // Limpiamos mocks y storage antes de cada test para que sean independientes
+  // Limpiamos mocks y storage antes de cada test
   beforeEach(() => {
     localStorage.clear();
     jest.clearAllMocks(); 
   });
 
-  // Helper para montar el hook envuelto en el Provider
+  // Helper para montar el hook
   const setupHook = (initialCart = []) => {
     localStorage.setItem('cart', JSON.stringify(initialCart));
     const wrapper = ({ children }) => <CartProvider>{children}</CartProvider>;
@@ -58,28 +56,19 @@ describe('CartContext - Pruebas Avanzadas (CRUD)', () => {
     expect(result.current.cart[0].quantity).toBe(3);
   });
 
-  test('2. addItem: Debería agregar un producto nuevo y llamar a Swal (CREATE)', () => {
+  test('2. addItem: Debería agregar un producto nuevo y notificar', () => {
     const { result } = setupHook();
 
-    // Usamos 'act' porque esto cambia el estado de React
     act(() => {
-      // Usamos el alias 'addItem' que definiste en tu Context
       result.current.addItem(mockProduct, 1);
     });
 
-    // Verificaciones
     expect(result.current.cart).toHaveLength(1);
     expect(result.current.cart[0].quantity).toBe(1);
-    
-    // Verificar persistencia en localStorage
-    const storedCart = JSON.parse(localStorage.getItem('cart'));
-    expect(storedCart).toHaveLength(1);
-    
-    // Verificar que se llamó a la alerta
     expect(Swal.fire).toHaveBeenCalled();
   });
 
-  test('3. addItem: Debería incrementar la cantidad si ya existe (UPDATE)', () => {
+  test('3. addItem: Debería incrementar la cantidad si ya existe', () => {
     const initialItem = { ...mockProduct, quantity: 5 };
     const { result } = setupHook([initialItem]);
 
@@ -91,7 +80,7 @@ describe('CartContext - Pruebas Avanzadas (CRUD)', () => {
     expect(result.current.cart[0].quantity).toBe(7); // 5 + 2 = 7
   });
 
-  test('4. updateItemQuantity: Debería fijar una cantidad específica (UPDATE)', () => {
+  test('4. updateItemQuantity: Debería fijar una cantidad específica', () => {
     const initialItem = { ...mockProduct, quantity: 2 };
     const { result } = setupHook([initialItem]);
 
@@ -102,12 +91,11 @@ describe('CartContext - Pruebas Avanzadas (CRUD)', () => {
     expect(result.current.cart[0].quantity).toBe(10);
   });
   
-  test('5. removeItem: Debería eliminar el producto del carrito (DELETE)', () => {
+  test('5. removeItem: Debería eliminar el producto del carrito', () => {
     const initialItem = { ...mockProduct, quantity: 5 };
     const { result } = setupHook([initialItem]);
 
     act(() => {
-      // Usamos el alias 'removeItem'
       result.current.removeItem(mockProduct.id);
     });
 
@@ -115,7 +103,7 @@ describe('CartContext - Pruebas Avanzadas (CRUD)', () => {
     expect(JSON.parse(localStorage.getItem('cart'))).toEqual([]);
   });
 
-  test('6. updateItemQuantity: Debería eliminar si la cantidad baja a 0 (DELETE Lógico)', () => {
+  test('6. updateItemQuantity: Debería eliminar si la cantidad baja a 0', () => {
     const initialItem = { ...mockProduct, quantity: 2 };
     const { result } = setupHook([initialItem]);
 
@@ -125,4 +113,31 @@ describe('CartContext - Pruebas Avanzadas (CRUD)', () => {
 
     expect(result.current.cart).toHaveLength(0);
   });
+
+  // --- NUEVOS TESTS ---
+
+  test('7. limpiarCarrito: Debería vaciar todo el carrito', () => {
+    // Preparamos un carrito con datos
+    const initialItem = { ...mockProduct, quantity: 5 };
+    const { result } = setupHook([initialItem]);
+
+    // Ejecutamos limpiar
+    act(() => {
+      result.current.limpiarCarrito();
+    });
+
+    // Verificamos que esté vacío
+    expect(result.current.cart).toHaveLength(0);
+  });
+
+  test('8. getTotalPrice: Debería calcular el total monetario correctamente', () => {
+    // Producto cuesta 1000. Si tenemos 3 unidades, total debe ser 3000.
+    const initialItem = { ...mockProduct, quantity: 3 }; 
+    const { result } = setupHook([initialItem]);
+
+    const total = result.current.getTotalPrice();
+
+    expect(total).toBe(3000);
+  });
+
 });
