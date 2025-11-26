@@ -6,7 +6,6 @@
     "@supabase/supabase-js": "^2.84.0",
     "@testing-library/dom": "^10.4.1",
     "@testing-library/jest-dom": "^6.9.1",
-    "@testing-library/react": "^16.3.0",
     "@testing-library/user-event": "^13.5.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
@@ -18,7 +17,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --transformIgnorePatterns \"node_modules/(?!react-router-dom)/\"",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "test-karma": "karma start"
   },
   "eslintConfig": {
     "extends": [
@@ -39,9 +39,26 @@
     ]
   },
   "devDependencies": {
+    "@babel/core": "^7.28.5",
+    "@babel/preset-env": "^7.28.5",
+    "@babel/preset-react": "^7.28.5",
+    "@testing-library/react": "^16.3.0",
     "autoprefixer": "^10.4.21",
+    "babel-loader": "^10.0.0",
+    "babel-plugin-istanbul": "^7.0.1",
+    "css-loader": "^7.1.2",
+    "jasmine-core": "^5.12.1",
+    "karma": "^6.4.4",
+    "karma-chrome-launcher": "^3.2.0",
+    "karma-coverage": "^2.2.1",
+    "karma-jasmine": "^5.1.0",
+    "karma-jasmine-html-reporter": "^2.1.0",
+    "karma-webpack": "^5.0.1",
     "postcss": "^8.5.6",
     "react-router-dom": "^7.9.6",
-    "tailwindcss": "^3.4.18"
+    "style-loader": "^4.0.0",
+    "tailwindcss": "^3.4.18",
+    "webpack": "^5.103.0",
+    "webpack-cli": "^6.0.1"
   }
 }
